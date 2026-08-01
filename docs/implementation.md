@@ -248,6 +248,32 @@ $$ language plpgsql;
 create trigger tasks_updated_at
   before update on public.tasks
   for each row execute function update_updated_at();
+
+-- Trigger: auto-sync user baru dari auth.users ke public.users
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  insert into public.users (id, email, full_name, avatar_url, provider)
+  values (
+    new.id,
+    new.email,
+    new.raw_user_meta_data->>'full_name',
+    new.raw_user_meta_data->>'avatar_url',
+    coalesce(new.raw_app_meta_data->>'provider', 'email')
+  )
+  on conflict (id) do update set
+    email = excluded.email,
+    full_name = coalesce(excluded.full_name, public.users.full_name);
+  return new;
+end;
+$$;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
 ```
 
 ### 1.6 Row Level Security (RLS)

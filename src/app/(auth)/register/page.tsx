@@ -1,3 +1,10 @@
+/**
+ * Nama File    : page.tsx
+ * Deskripsi    : Halaman registrasi akun pengguna baru dengan input Nama Lengkap, Email, dan Password
+ * Dibuat oleh  : Tim Pengembang
+ * Tanggal      : 2026-08-01
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -12,23 +19,42 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    const { error } = await supabase.auth.signUp({
+    setSuccess('');
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { full_name: fullName } },
     });
+
     if (error) {
       setError(error.message);
       setLoading(false);
-    } else {
+      return;
+    }
+
+    // Jika email sudah terdaftar di Supabase dengan email confirmation aktif
+    if (data?.user && data.user.identities && data.user.identities.length === 0) {
+      setError('Email ini sudah terdaftar. Silakan masuk dengan akun Anda.');
+      setLoading(false);
+      return;
+    }
+
+    if (data?.session) {
+      // Sesi langsung dibuat (auto-confirm aktif)
       router.push('/dashboard');
       router.refresh();
+    } else {
+      // Email confirmation aktif di Supabase
+      setSuccess('Registrasi berhasil! Silakan periksa email Anda untuk verifikasi akun, lalu masuk di halaman login.');
+      setLoading(false);
     }
   };
 
@@ -46,6 +72,12 @@ export default function RegisterPage() {
           </div>
         )}
 
+        {success && (
+          <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 p-3 rounded-xl">
+            {success}
+          </div>
+        )}
+
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Nama Lengkap</label>
@@ -55,7 +87,7 @@ export default function RegisterPage() {
               placeholder="Nama Anda"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 bg-white placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
             />
           </div>
 
@@ -67,7 +99,7 @@ export default function RegisterPage() {
               placeholder="nama@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 bg-white placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
             />
           </div>
 
@@ -79,7 +111,7 @@ export default function RegisterPage() {
               placeholder="Minimal 6 karakter"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 bg-white placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
             />
           </div>
 

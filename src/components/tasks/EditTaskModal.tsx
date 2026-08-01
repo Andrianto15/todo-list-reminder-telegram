@@ -1,3 +1,10 @@
+/**
+ * Nama File    : EditTaskModal.tsx
+ * Deskripsi    : Komponen modal untuk mengedit task yang sudah ada
+ * Dibuat oleh  : Tim Pengembang
+ * Tanggal      : 2026-08-01
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -55,7 +62,7 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm text-gray-900 bg-white placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
           />
         </div>
 
@@ -64,7 +71,7 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as TaskStatus)}
-            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
+            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
           >
             <option value="to_do">To Do</option>
             <option value="hold">Hold (Ditunda)</option>
@@ -80,7 +87,7 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
             required
             value={reminderDate}
             onChange={(e) => setReminderDate(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm text-gray-900 bg-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
           />
         </div>
 
@@ -91,7 +98,7 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none"
+            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm text-gray-900 bg-white placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none"
           />
         </div>
 
