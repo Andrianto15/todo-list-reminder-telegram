@@ -38,6 +38,7 @@ export async function POST() {
 
     try {
       // Kirim pesan pengingat ke Telegram
+      console.info(`Masuk ke proses pengiriman telegram chat id ${process.env.TELEGRAM_BOT_TOKEN} - ${chatId}`);
       await fetch(
         `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
         {
@@ -51,6 +52,8 @@ export async function POST() {
           }),
         }
       );
+
+      console.info('sudah proses kirim');
 
       // Hitung waktu pengingat berikutnya
       const nextRemindAt = getNextRemindAt(task);
