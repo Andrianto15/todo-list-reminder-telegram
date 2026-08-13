@@ -6,13 +6,19 @@ import {
   getNextRemindAt,
 } from '@/lib/telegram/reminder';
 
-// Menggunakan service role key untuk bypass RLS (karena dijalankan oleh cron job)
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export async function POST() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    console.error('Missing SUPABASE env variables for api/remind');
+    return NextResponse.json(
+      { error: 'Server configuration error: Missing Supabase keys' },
+      { status: 500 }
+    );
+  }
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
   const now = new Date().toISOString();
 
   // Ambil tasks yang sudah waktunya dikirimi reminder
@@ -27,8 +33,13 @@ export async function POST() {
     .not('telegram_connections.telegram_chat_id', 'is', null)
     .eq('telegram_connections.is_connected', true);
 
-  if (error || !tasks?.length) {
-    return NextResponse.json({ sent: 0 });
+  if (error) {
+    console.error('Error fetching tasks for reminder:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (!tasks?.length) {
+    return NextResponse.json({ sent: 0, message: 'No tasks due' });
   }
 
   let sent = 0;
@@ -37,9 +48,9 @@ export async function POST() {
     const chatId = task.telegram_connections.telegram_chat_id;
 
     try {
-      // Kirim pesan pengingat ke Telegram
-      console.info(`Masuk ke proses pengiriman telegram chat id ${process.env.TELEGRAM_BOT_TOKEN} - ${chatId}`);
-      await fetch(
+      console.info(`Mengirim reminder task ${task.id} ke telegram chat_id: ${chatId}`);
+
+      const response = await fetch(
         `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
         {
           method: 'POST',
@@ -53,7 +64,13 @@ export async function POST() {
         }
       );
 
-      console.info('sudah proses kirim');
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Telegram API error for task ${task.id}: ${response.status} ${errorText}`);
+        continue;
+      }
+
+      console.info(`Berhasil kirim telegram task ${task.id}`);
 
       // Hitung waktu pengingat berikutnya
       const nextRemindAt = getNextRemindAt(task);

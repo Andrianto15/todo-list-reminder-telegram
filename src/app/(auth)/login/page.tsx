@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import packageJson from '../../../../package.json';
 
 export default function LoginPage() {
   const supabase = createClient();
@@ -89,6 +90,8 @@ export default function LoginPage() {
           </button>
         </form>
 
+        {/* Temporarily hidden Google Login */}
+        {/*
         <div className="relative text-center text-xs text-gray-400">
           <span className="bg-white px-2 relative z-10">atau</span>
           <div className="absolute inset-0 flex items-center">
@@ -103,12 +106,17 @@ export default function LoginPage() {
         >
           <span>Masuk dengan Google</span>
         </button>
+        */}
 
         <p className="text-center text-xs text-gray-500">
           Belum punya akun?{' '}
           <Link href="/register" className="text-indigo-600 font-semibold hover:underline">
             Daftar sekarang
           </Link>
+        </p>
+
+        <p className="text-center text-xs text-gray-400 pt-2 border-t border-gray-100">
+          v{packageJson.version}
         </p>
       </div>
     </div>
