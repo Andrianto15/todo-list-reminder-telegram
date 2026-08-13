@@ -1,58 +1,14 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import { TelegramConnection } from '@/types';
+import { useState } from 'react';
+import { useTelegram } from '@/hooks/useTelegram';
 import Navbar from '@/components/ui/Navbar';
 import { CheckCircle2, Copy, Check, Loader2, Send, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function TelegramSettingsPage() {
-  const supabase = createClient();
-  const [conn, setConn] = useState<TelegramConnection | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [generating, setGenerating] = useState(false);
+  const { conn, loading, generating, generateToken } = useTelegram();
   const [copied, setCopied] = useState(false);
-
-  const fetchConnection = useCallback(async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) return;
-
-    const { data } = await supabase
-      .from('telegram_connections')
-      .select('*')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    setConn(data);
-    setLoading(false);
-  }, [supabase]);
-
-  useEffect(() => {
-    fetchConnection();
-  }, [fetchConnection]);
-
-  const generateToken = async () => {
-    setGenerating(true);
-    try {
-      const res = await fetch('/api/telegram/connect', { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        setConn(data);
-        toast.success('Token koneksi baru berhasil dibuat!');
-      } else {
-        toast.error('Gagal membuat token koneksi');
-      }
-    } catch (err) {
-      console.error('Failed to generate token:', err);
-      toast.error('Terjadi kesalahan koneksi');
-    } finally {
-      setGenerating(false);
-    }
-  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -60,6 +16,7 @@ export default function TelegramSettingsPage() {
     toast.success('Command /start berhasil disalin ke clipboard! 📋');
     setTimeout(() => setCopied(false), 2000);
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50/50">

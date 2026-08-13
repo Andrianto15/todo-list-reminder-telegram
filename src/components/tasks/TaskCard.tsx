@@ -2,15 +2,16 @@ import { Task } from '@/types';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import StatusBadge from './StatusBadge';
-import { Check, Clock, Bell, Pencil } from 'lucide-react';
+import { Check, Clock, Bell, Pencil, Trash2 } from 'lucide-react';
 
 interface Props {
   task: Task;
   onEdit: () => void;
   onStatusChange: (taskId: string, status: Task['status']) => void;
+  onDelete?: () => void;
 }
 
-export default function TaskCard({ task, onEdit, onStatusChange }: Props) {
+export default function TaskCard({ task, onEdit, onStatusChange, onDelete }: Props) {
   const isDone = task.status === 'done';
   const isCancel = task.status === 'cancel';
   const isEditable = !isDone && !isCancel;
@@ -52,7 +53,7 @@ export default function TaskCard({ task, onEdit, onStatusChange }: Props) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-1 flex-shrink-0">
           <StatusBadge status={task.status} />
           {isEditable && (
             <button
@@ -63,9 +64,19 @@ export default function TaskCard({ task, onEdit, onStatusChange }: Props) {
               <Pencil size={14} />
             </button>
           )}
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="text-gray-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition"
+              title="Hapus Task"
+            >
+              <Trash2 size={14} />
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
 

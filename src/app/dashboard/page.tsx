@@ -1,150 +1,143 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { Task } from '@/types';
+import { useState, useMemo } from 'react';
+import { Task, TaskStatus } from '@/types';
 import { format } from 'date-fns';
+import { useTasks } from '@/hooks/useTasks';
 import Top3Highlight from '@/components/tasks/Top3Highlight';
 import TaskGroup from '@/components/tasks/TaskGroup';
+import TaskFilter from '@/components/tasks/TaskFilter';
 import AddTaskModal from '@/components/tasks/AddTaskModal';
 import EditTaskModal from '@/components/tasks/EditTaskModal';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import TaskSkeleton from '@/components/ui/TaskSkeleton';
 import FAB from '@/components/ui/FAB';
 import EmptyState from '@/components/ui/EmptyState';
 import Navbar from '@/components/ui/Navbar';
-import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
 
 export default function DashboardPage() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { tasks, loading, addTask, updateStatus, editTask, deleteTask } = useTasks();
+
   const [showAdd, setShowAdd] = useState(false);
-  const [editTask, setEditTask] = useState<Task | null>(null);
+  const [editTarget, setEditTarget] = useState<Task | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Task | null>(null);
 
-  const fetchTasks = useCallback(async () => {
-    try {
-      const res = await fetch('/api/tasks');
-      if (res.ok) {
-        const data = await res.json();
-        setTasks(data);
-      } else {
-        toast.error('Gagal mengambil daftar pengingat');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<TaskStatus | 'all'>('all');
+
+  // Filter tasks berdasarkan query pencarian dan tab status
+  const filteredTasks = useMemo(() => {
+    return tasks.filter((t) => {
+      const matchSearch =
+        t.title.toLowerCase().includes(search.toLowerCase()) ||
+        (t.notes && t.notes.toLowerCase().includes(search.toLowerCase()));
+      const matchStatus = statusFilter === 'all' || t.status === statusFilter;
+      return matchSearch && matchStatus;
+    });
+  }, [tasks, search, statusFilter]);
+
+  // Hitung jumlah task per status untuk badge filter
+  const filterCounts = useMemo(() => {
+    const counts: Record<TaskStatus | 'all', number> = {
+      all: tasks.length,
+      to_do: 0,
+      done: 0,
+      hold: 0,
+      cancel: 0,
+    };
+    tasks.forEach((t) => {
+      if (counts[t.status] !== undefined) {
+        counts[t.status]++;
       }
-    } catch (err) {
-      console.error('Failed to fetch tasks:', err);
-      toast.error('Koneksi terputus. Silakan coba lagi.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    });
+    return counts;
+  }, [tasks]);
 
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
-
-  // Kelompokkan tasks berdasarkan tanggal pengingat
-  const grouped = tasks.reduce<Record<string, Task[]>>((acc, task) => {
-    const day = format(new Date(task.reminder_date), 'yyyy-MM-dd');
-    if (!acc[day]) acc[day] = [];
-    acc[day].push(task);
-    return acc;
-  }, {});
-
-  const handleAdd = async (data: { title: string; notes?: string; reminder_date: string }) => {
-    try {
-      const res = await fetch('/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (res.ok) {
-        toast.success('Task baru berhasil ditambahkan! 🚀');
-        fetchTasks();
-      } else {
-        toast.error('Gagal menambahkan task baru.');
-      }
-    } catch {
-      toast.error('Terjadi kesalahan sistem.');
-    }
-  };
-
-  const handleStatusChange = async (taskId: string, status: Task['status']) => {
-    try {
-      const res = await fetch(`/api/tasks/${taskId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-
-      if (res.ok) {
-        if (status === 'done') {
-          toast.success('Task diselesaikan! 🎉');
-        } else {
-          toast.info('Status task diperbarui');
-        }
-        fetchTasks();
-      } else {
-        toast.error('Gagal mengubah status task.');
-      }
-    } catch {
-      toast.error('Terjadi kesalahan sistem.');
-    }
-  };
+  // Kelompokkan filtered tasks berdasarkan tanggal pengingat
+  const grouped = useMemo(() => {
+    return filteredTasks.reduce<Record<string, Task[]>>((acc, task) => {
+      const day = format(new Date(task.reminder_date), 'yyyy-MM-dd');
+      if (!acc[day]) acc[day] = [];
+      acc[day].push(task);
+      return acc;
+    }, {});
+  }, [filteredTasks]);
 
   return (
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
       <div className="max-w-lg mx-auto px-4 py-6 pb-24">
         {loading ? (
-          <div className="flex items-center justify-center py-20 text-sm text-gray-400 gap-2">
-            <Loader2 size={20} className="animate-spin text-indigo-600" />
-            <span>Memuat pengingat...</span>
-          </div>
+          <TaskSkeleton />
         ) : tasks.length === 0 ? (
           <EmptyState onAdd={() => setShowAdd(true)} />
         ) : (
           <>
             <Top3Highlight tasks={tasks} />
-            {Object.entries(grouped).map(([date, dayTasks]) => (
-              <TaskGroup
-                key={date}
-                date={date}
-                tasks={dayTasks}
-                onEdit={setEditTask}
-                onStatusChange={handleStatusChange}
-              />
-            ))}
+
+            <TaskFilter
+              search={search}
+              onSearchChange={setSearch}
+              statusFilter={statusFilter}
+              onStatusFilterChange={setStatusFilter}
+              counts={filterCounts}
+            />
+
+            {filteredTasks.length === 0 ? (
+              <div className="text-center py-12 text-xs text-gray-400">
+                Tidak ada pengingat yang cocok dengan pencarian / filter.
+              </div>
+            ) : (
+              Object.entries(grouped).map(([date, dayTasks]) => (
+                <TaskGroup
+                  key={date}
+                  date={date}
+                  tasks={dayTasks}
+                  onEdit={setEditTarget}
+                  onStatusChange={updateStatus}
+                  onDelete={setDeleteTarget}
+                />
+              ))
+            )}
           </>
         )}
       </div>
 
       <FAB onClick={() => setShowAdd(true)} />
-      <AddTaskModal open={showAdd} onClose={() => setShowAdd(false)} onAdd={handleAdd} />
-      {editTask && (
-        <EditTaskModal
-          task={editTask}
-          onClose={() => setEditTask(null)}
-          onSave={async (data) => {
-            try {
-              const res = await fetch(`/api/tasks/${editTask.id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-              });
 
-              if (res.ok) {
-                toast.success('Perubahan task berhasil disimpan!');
-                fetchTasks();
-                setEditTask(null);
-              } else {
-                toast.error('Gagal memperbarui task.');
-              }
-            } catch {
-              toast.error('Terjadi kesalahan sistem.');
-            }
+      <AddTaskModal
+        open={showAdd}
+        onClose={() => setShowAdd(false)}
+        onAdd={addTask}
+      />
+
+      {editTarget && (
+        <EditTaskModal
+          task={editTarget}
+          onClose={() => setEditTarget(null)}
+          onSave={async (data) => {
+            await editTask(editTarget.id, data);
+            setEditTarget(null);
           }}
+        />
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          open={!!deleteTarget}
+          onClose={() => setDeleteTarget(null)}
+          onConfirm={() => {
+            deleteTask(deleteTarget.id);
+            setDeleteTarget(null);
+          }}
+          title="Hapus Task"
+          description={`Apakah Anda yakin ingin menghapus "${deleteTarget.title}"? Tindakan ini tidak dapat dibatalkan.`}
+          confirmText="Ya, Hapus"
+          isDestructive={true}
         />
       )}
     </div>
   );
 }
+
 
