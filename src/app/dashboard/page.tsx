@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Task, TaskStatus } from '@/types';
 import { format } from 'date-fns';
 import { useTasks } from '@/hooks/useTasks';
+import TaskStats from '@/components/tasks/TaskStats';
 import Top3Highlight from '@/components/tasks/Top3Highlight';
 import TaskGroup from '@/components/tasks/TaskGroup';
 import TaskFilter from '@/components/tasks/TaskFilter';
@@ -64,7 +65,7 @@ export default function DashboardPage() {
   }, [filteredTasks]);
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gray-50/50 dark:bg-slate-900 transition-colors">
       <Navbar />
       <div className="max-w-lg mx-auto px-4 py-6 pb-24">
         {loading ? (
@@ -73,6 +74,7 @@ export default function DashboardPage() {
           <EmptyState onAdd={() => setShowAdd(true)} />
         ) : (
           <>
+            <TaskStats tasks={tasks} />
             <Top3Highlight tasks={tasks} />
 
             <TaskFilter
@@ -84,7 +86,7 @@ export default function DashboardPage() {
             />
 
             {filteredTasks.length === 0 ? (
-              <div className="text-center py-12 text-xs text-gray-400">
+              <div className="text-center py-12 text-xs text-gray-400 dark:text-slate-500">
                 Tidak ada pengingat yang cocok dengan pencarian / filter.
               </div>
             ) : (
@@ -102,6 +104,7 @@ export default function DashboardPage() {
           </>
         )}
       </div>
+
 
       <FAB onClick={() => setShowAdd(true)} />
 

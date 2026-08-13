@@ -42,47 +42,48 @@ export default function AddTaskModal({ open, onClose, onAdd }: Props) {
     <Modal open={open} onClose={onClose} title="Tambah Task Baru">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Judul Task *</label>
+          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Judul Task *</label>
           <input
             type="text"
             required
             placeholder="Contoh: Bayar Listrik..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm text-gray-900 bg-white placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Tanggal & Waktu Pengingat *</label>
+          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Tanggal & Waktu Pengingat *</label>
           <input
             type="datetime-local"
             required
             value={reminderDate}
             onChange={(e) => setReminderDate(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm text-gray-900 bg-white outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Catatan (opsional)</label>
+          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Catatan (opsional)</label>
           <textarea
             placeholder="Tambah catatan detail..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm text-gray-900 bg-white placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none"
+            className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading || !title.trim() || !reminderDate}
-          className="w-full bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition shadow-sm shadow-indigo-200"
+          className="w-full bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition shadow-sm shadow-indigo-200 dark:shadow-none"
         >
           {loading ? 'Menyimpan...' : 'Simpan Task'}
         </button>
       </form>
     </Modal>
+
   );
 }
