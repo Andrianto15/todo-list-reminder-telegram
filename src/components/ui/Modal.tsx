@@ -1,6 +1,8 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 
 interface ModalProps {
   open: boolean;
@@ -10,22 +12,42 @@ interface ModalProps {
 }
 
 export default function Modal({ open, onClose, title, children }: ModalProps) {
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-gray-100 space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-          <button
+    <AnimatePresence>
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 rounded-lg p-1 hover:bg-gray-100 transition"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+          />
+
+          {/* Modal Container */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ type: 'spring', duration: 0.25 }}
+            className="relative bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 space-y-4 z-10"
           >
-            ✕
-          </button>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-600 rounded-xl p-1.5 hover:bg-gray-100 transition"
+                aria-label="Tutup modal"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div>{children}</div>
+          </motion.div>
         </div>
-        <div>{children}</div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }
+

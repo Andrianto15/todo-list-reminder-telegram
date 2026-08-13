@@ -10,6 +10,8 @@ import EditTaskModal from '@/components/tasks/EditTaskModal';
 import FAB from '@/components/ui/FAB';
 import EmptyState from '@/components/ui/EmptyState';
 import Navbar from '@/components/ui/Navbar';
+import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -23,9 +25,12 @@ export default function DashboardPage() {
       if (res.ok) {
         const data = await res.json();
         setTasks(data);
+      } else {
+        toast.error('Gagal mengambil daftar pengingat');
       }
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
+      toast.error('Koneksi terputus. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -44,21 +49,45 @@ export default function DashboardPage() {
   }, {});
 
   const handleAdd = async (data: { title: string; notes?: string; reminder_date: string }) => {
-    await fetch('/api/tasks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    fetchTasks();
+    try {
+      const res = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        toast.success('Task baru berhasil ditambahkan! 🚀');
+        fetchTasks();
+      } else {
+        toast.error('Gagal menambahkan task baru.');
+      }
+    } catch {
+      toast.error('Terjadi kesalahan sistem.');
+    }
   };
 
   const handleStatusChange = async (taskId: string, status: Task['status']) => {
-    await fetch(`/api/tasks/${taskId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
-    fetchTasks();
+    try {
+      const res = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+
+      if (res.ok) {
+        if (status === 'done') {
+          toast.success('Task diselesaikan! 🎉');
+        } else {
+          toast.info('Status task diperbarui');
+        }
+        fetchTasks();
+      } else {
+        toast.error('Gagal mengubah status task.');
+      }
+    } catch {
+      toast.error('Terjadi kesalahan sistem.');
+    }
   };
 
   return (
@@ -67,7 +96,7 @@ export default function DashboardPage() {
       <div className="max-w-lg mx-auto px-4 py-6 pb-24">
         {loading ? (
           <div className="flex items-center justify-center py-20 text-sm text-gray-400 gap-2">
-            <span className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></span>
+            <Loader2 size={20} className="animate-spin text-indigo-600" />
             <span>Memuat pengingat...</span>
           </div>
         ) : tasks.length === 0 ? (
@@ -95,16 +124,27 @@ export default function DashboardPage() {
           task={editTask}
           onClose={() => setEditTask(null)}
           onSave={async (data) => {
-            await fetch(`/api/tasks/${editTask.id}`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data),
-            });
-            fetchTasks();
-            setEditTask(null);
+            try {
+              const res = await fetch(`/api/tasks/${editTask.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+              });
+
+              if (res.ok) {
+                toast.success('Perubahan task berhasil disimpan!');
+                fetchTasks();
+                setEditTask(null);
+              } else {
+                toast.error('Gagal memperbarui task.');
+              }
+            } catch {
+              toast.error('Terjadi kesalahan sistem.');
+            }
           }}
         />
       )}
     </div>
   );
 }
+
