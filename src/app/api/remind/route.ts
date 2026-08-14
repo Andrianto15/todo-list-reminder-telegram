@@ -21,17 +21,39 @@ export async function POST() {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
   const now = new Date().toISOString();
 
-  // Ambil tasks yang sudah waktunya dikirimi reminder
+  // 1. Ambil koneksi Telegram yang aktif
+  const { data: connections, error: connError } = await supabase
+    .from('telegram_connections')
+    .select('user_id, telegram_chat_id')
+    .eq('is_connected', true)
+    .not('telegram_chat_id', 'is', null);
+
+  if (connError) {
+    console.error('Error fetching telegram connections:', connError);
+    return NextResponse.json({ error: connError.message }, { status: 500 });
+  }
+
+  if (!connections?.length) {
+    return NextResponse.json({ sent: 0, message: 'No active telegram connections' });
+  }
+
+  // Buat map user_id -> telegram_chat_id
+  const chatMap = new Map<string, string>();
+  for (const conn of connections) {
+    if (conn.telegram_chat_id) {
+      chatMap.set(conn.user_id, conn.telegram_chat_id);
+    }
+  }
+
+  const userIds = Array.from(chatMap.keys());
+
+  // 2. Ambil tasks yang sudah waktunya dikirimi reminder untuk user tersebut
   const { data: tasks, error } = await supabase
     .from('tasks')
-    .select(`
-      *,
-      telegram_connections!inner(telegram_chat_id, is_connected)
-    `)
+    .select('*')
+    .in('user_id', userIds)
     .in('status', ['to_do', 'hold'])
-    .lte('next_remind_at', now)
-    .not('telegram_connections.telegram_chat_id', 'is', null)
-    .eq('telegram_connections.is_connected', true);
+    .lte('next_remind_at', now);
 
   if (error) {
     console.error('Error fetching tasks for reminder:', error);
@@ -45,7 +67,8 @@ export async function POST() {
   let sent = 0;
 
   for (const task of tasks) {
-    const chatId = task.telegram_connections.telegram_chat_id;
+    const chatId = chatMap.get(task.user_id);
+    if (!chatId) continue;
 
     try {
       console.info(`Mengirim reminder task ${task.id} ke telegram chat_id: ${chatId}`);
