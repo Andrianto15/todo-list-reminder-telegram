@@ -1,31 +1,45 @@
-import { Task } from '@/types';
-import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
+import { Task, TaskStatus } from '@/types';
 
-const REMINDER_INTERVALS_MINUTES = [15, 15, 15, 15]; // 4x 15 menit = 1 jam pertama
 const HOURLY_INTERVAL_MINUTES = 60;
-const MAX_REMINDER_HOURS = 24;
+const MAX_REMINDER_HOURS = 6;
+const MAX_REMINDER_COUNT = 6;
+
+export function isTaskEligibleForReminder(status: TaskStatus): boolean {
+  return status === 'to_do';
+}
 
 export function getNextRemindAt(task: Task): Date | null {
   const now = new Date();
   const firstReminder = new Date(task.reminder_date);
   const hoursSinceFirst = (now.getTime() - firstReminder.getTime()) / (1000 * 60 * 60);
 
-  // Berhenti setelah 24 jam jika tidak ditanggapi
-  if (hoursSinceFirst >= MAX_REMINDER_HOURS) return null;
-
-  const count = task.reminder_count;
-  let minutesUntilNext: number;
-
-  if (count < REMINDER_INTERVALS_MINUTES.length) {
-    // Fase 15 menit pertama (4x)
-    minutesUntilNext = REMINDER_INTERVALS_MINUTES[count];
-  } else {
-    // Fase 1 jam berikutnya
-    minutesUntilNext = HOURLY_INTERVAL_MINUTES;
+  // Berhenti setelah 6 jam atau sudah mencapai 6 kali pengingat
+  if (hoursSinceFirst >= MAX_REMINDER_HOURS || task.reminder_count + 1 >= MAX_REMINDER_COUNT) {
+    return null;
   }
 
-  return new Date(now.getTime() + minutesUntilNext * 60 * 1000);
+  return new Date(now.getTime() + HOURLY_INTERVAL_MINUTES * 60 * 1000);
+}
+
+export function formatReminderDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  const parts = new Intl.DateTimeFormat('id-ID', {
+    timeZone: 'Asia/Jakarta',
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    hourCycle: 'h23',
+  }).formatToParts(d);
+
+  const map: Record<string, string> = {};
+  for (const p of parts) {
+    map[p.type] = p.value;
+  }
+  return `${map.weekday}, ${map.day} ${map.month} ${map.year} · ${map.hour}:${map.minute}`;
 }
 
 export function formatReminderMessage(task: Task): string {
@@ -36,7 +50,7 @@ export function formatReminderMessage(task: Task): string {
 
 📌 <b>${task.title}</b>
 
-🕐 ${format(new Date(task.reminder_date), "EEEE, d MMMM yyyy · HH:mm", { locale: id })}${
+🕐 ${formatReminderDate(task.reminder_date)}${
     task.notes ? `\n\n📝 ${task.notes}` : ''
   }`;
 }
@@ -45,7 +59,9 @@ export function getReminderInlineKeyboard(taskId: string) {
   return {
     inline_keyboard: [
       [
-        { text: '✅ Tandai Selesai', callback_data: `done:${taskId}` },
+        { text: '✅ Done', callback_data: `done:${taskId}` },
+        { text: '⏸️ Hold', callback_data: `hold:${taskId}` },
+        { text: '❌ Cancel', callback_data: `cancel:${taskId}` },
       ],
     ],
   };

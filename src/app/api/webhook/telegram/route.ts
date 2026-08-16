@@ -59,14 +59,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  // Handle callback_query (saat tombol 'Tandai Selesai' di Telegram diklik)
+  // Handle callback_query (saat tombol 'Done', 'Hold', atau 'Cancel' di Telegram diklik)
   if (body.callback_query) {
     const { id: callbackId, data, message } = body.callback_query;
     const chatId = String(message.chat.id);
 
-    if (data?.startsWith('done:')) {
-      const taskId = data.replace('done:', '');
+    const [action, taskId] = (data || '').split(':');
 
+    if (taskId && ['done', 'hold', 'cancel'].includes(action)) {
       // Ambil user_id pemilik Telegram Chat ini
       const { data: conn } = await supabase
         .from('telegram_connections')
@@ -76,11 +76,25 @@ export async function POST(request: Request) {
         .single();
 
       if (conn) {
-        // Update status task menjadi 'done' dan matikan next_remind_at
+        let statusUpdate: 'done' | 'hold' | 'cancel' = 'done';
+        let feedbackText = '✅ Task berhasil ditandai selesai!';
+        let statusLabel = '✅ <b>SUDAH SELESAI</b>';
+
+        if (action === 'hold') {
+          statusUpdate = 'hold';
+          feedbackText = '⏸️ Task berhasil di-hold!';
+          statusLabel = '⏸️ <b>STATUS: HOLD</b>';
+        } else if (action === 'cancel') {
+          statusUpdate = 'cancel';
+          feedbackText = '❌ Task berhasil dibatalkan!';
+          statusLabel = '❌ <b>DIBATALKAN</b>';
+        }
+
+        // Update status task dan matikan next_remind_at
         await supabase
           .from('tasks')
           .update({
-            status: 'done',
+            status: statusUpdate,
             next_remind_at: null,
             updated_at: new Date().toISOString(),
           })
@@ -88,13 +102,13 @@ export async function POST(request: Request) {
           .eq('user_id', conn.user_id);
 
         // Hapus indikator loading di tombol Telegram
-        await answerCallbackQuery(callbackId, '✅ Task berhasil ditandai selesai!');
+        await answerCallbackQuery(callbackId, feedbackText);
 
-        // Edit isi pesan Telegram agar memperlihatkan status selesai
+        // Edit isi pesan Telegram agar memperlihatkan status baru
         await editTelegramMessage(
           chatId,
           message.message_id,
-          `${message.text}\n\n✅ <b>SUDAH SELESAI</b>`
+          `${message.text}\n\n${statusLabel}`
         );
       }
     }

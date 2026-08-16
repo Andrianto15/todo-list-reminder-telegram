@@ -2,13 +2,15 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.0
-* **Date:** Juni 2026
+* **Version:** 3.2
+* **Date:** 16 Agustus 2026
 * **Author:** Project Owner
 * **Changelog:**
   * v1.0 — Draft awal
   * v2.0 — Tambah auth, soft delete, persistent reminder, pisah tabel `telegram_connections`
   * v3.0 — Tambah detail API routes, struktur folder, flow koneksi Telegram, catatan teknis deployment
+  * v3.1 — Update branding maskot aplikasi (Favicon browser, PWA home screen icons 192x192 & 512x512, dan Navbar logo)
+  * v3.2 — Format waktu reminder Telegram UTC+7 (WIB) & penambahan inline keyboard Done, Hold, Cancel
 
 ---
 
@@ -53,9 +55,10 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-0.2:** Setiap user hanya dapat mengakses data miliknya sendiri (multi-user isolation via RLS).
 * **FR-0.3:** Penghapusan akun menggunakan **soft delete**: set `is_active = false` dan `deactivated_at`, data tidak dihapus permanen.
 
-### 4.2 PWA Core Capability
+### 4.2 PWA Core Capability & Branding
 * **FR-1.1:** Aplikasi dapat diinstal di Android, iOS, dan Desktop (Add to Home Screen).
 * **FR-1.2:** Aplikasi memiliki Web App Manifest dan mendukung pemuatan instan via Service Workers.
+* **FR-1.3 App Branding & Assets:** Aplikasi menggunakan aset logo maskot jam alarm resmi yang seragam pada Favicon browser (`src/app/favicon.ico`), PWA Home Screen icons (`public/icons/icon-192x192.png`, `public/icons/icon-512x512.png`), dan Navbar header (`public/icons/logo.png`).
 
 ### 4.3 Task Management (CRUD)
 * **FR-2.1 Input Task:** User dapat memasukkan judul tugas, tanggal & waktu reminder, dan catatan tambahan (opsional).
@@ -68,19 +71,31 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-2.4 Cancel Task:** Tidak ada fitur hapus. Pembatalan hanya melakukan soft update status menjadi `cancel`.
 
 ### 4.4 Dashboard View
-* **FR-3.1 Grouping View:** Halaman utama menampilkan task yang dikelompokkan per hari (Hari Ini, Besok, Rabu 11 Juni, dst).
+* **FR-3.1 Grouping View:** Halaman utama menampilkan task yang dikelompokkan per hari dengan format header bahasa Inggris lengkap dengan tahun (contoh `MONDAY, 3 AUG 2026`).
 * **FR-3.2 Top 3 Highlight:** Di bagian paling atas dashboard, sistem memunculkan maksimal 3 task dengan `reminder_date` terdekat, filter status `to_do` atau `hold`, diurutkan ascending.
+* **FR-3.3 Task Summary & Progress Calculation:** Kartu summary menampilkan progres tugas aktif yang difilter khusus:
+  * Memuat semua tugas yang dijadwalkan **hari ini** (apapun statusnya).
+  * Memuat tugas dari **hari sebelum/sesudahnya** yang berstatus belum selesai (`status !== 'done'`).
+  * Tugas selesai (`done`) dari luar hari ini tidak dihitung dalam progress harian.
+  * Menyediakan **badge / section terpisah** yang menghitung akumulasi seluruh tugas berstatus `done` di aplikasi untuk memudahkan monitoring.
+* **FR-3.4 Task Sorting & Load More Pagination:**
+  * Data task diurutkan secara **descending** (dari yang terbaru ke terlama berdasarkan `reminder_date`).
+  * Tampilan awal membatasi maksimal 5 data teratas.
+  * Menyediakan tombol aksi mobile-first **"Load More..."** di bagian bawah daftar untuk memuat 5 data berikutnya secara bertahap hingga seluruh data ditampilkan.
+  * Reset limit tampilan kembali ke 5 setiap kali filter status atau query pencarian berubah.
 
 ### 4.5 Telegram Bot Integration & Persistent Reminder
 * **FR-4.1 Koneksi Akun:** User menghubungkan akun Telegram mereka melalui halaman Settings. Flow: generate token unik di app → user kirim token ke bot → bot verifikasi & simpan `telegram_chat_id`.
 * **FR-4.2 Automated Alert:** Sistem otomatis mengirimkan reminder ke Telegram user tepat pada `reminder_date`.
 * **FR-4.3 Persistent Reminder:** Setelah reminder pertama terkirim, sistem mengirim ulang secara otomatis dengan interval:
-  * **15 menit** sekali selama 1 jam pertama.
-  * **1 jam** sekali setelahnya.
-  * **Berhenti otomatis** setelah 24 jam atau jika task di-mark `done`.
-* **FR-4.4 Message Design:** Pesan Telegram menggunakan format HTML dengan header urgensi, judul bold, tanggal & waktu, dan catatan.
-* **FR-4.5 Interactive Inline Button:** Setiap pesan reminder menyertakan tombol **"✅ Tandai Selesai"**.
-* **FR-4.6 Webhook Status Update:** Klik tombol di Telegram → Webhook → update status task jadi `done` di DB → konfirmasi di Telegram. User tidak perlu membuka app PWA.
+  * **1 jam** sekali.
+  * **Berhenti otomatis** setelah 6 jam / maksimal 6 kali pengingat, atau jika status task diubah menjadi `done`, `hold`, atau `cancel`.
+* **FR-4.4 Message Design:** Pesan Telegram menggunakan format HTML dengan header urgensi, judul bold, tanggal & waktu dalam zona waktu **UTC+7 (Asia/Jakarta / WIB)** (`EEEE, d MMMM yyyy · HH:mm`), dan catatan.
+* **FR-4.5 Interactive Inline Buttons:** Setiap pesan reminder menyertakan baris tombol interaktif:
+  * `✅ Done` — Mengubah status task menjadi `done` dan menghentikan pengingat.
+  * `⏸️ Hold` — Mengubah status task menjadi `hold` (ditangguhkan) dan menghentikan pengingat.
+  * `❌ Cancel` — Mengubah status task menjadi `cancel` (dibatalkan) dan menghentikan pengingat.
+* **FR-4.6 Webhook Status Update:** Klik tombol di Telegram → Webhook memproses callback query (`done:id`, `hold:id`, `cancel:id`) → update status task dan set `next_remind_at = null` di database Supabase → notifikasi toast/popup Telegram + update label status pada pesan Telegram. User tidak perlu membuka app PWA.
 
 ---
 
@@ -207,9 +222,9 @@ todo-pwa/
 ### Persistent Reminder Logic
 - Saat task dibuat: `next_remind_at = reminder_date`, `reminder_count = 0`.
 - Setiap kali reminder terkirim: increment `reminder_count`, update `last_reminded_at`, kalkulasi `next_remind_at` baru.
-- Interval: 15 menit untuk 4 pengiriman pertama (1 jam), lalu 60 menit setelahnya.
-- Jika sudah 24 jam sejak `reminder_date`: set `next_remind_at = null` → cron berhenti memproses task ini.
-- Jika task di-`done`: cron query otomatis skip karena filter `status IN ('to_do', 'hold')`.
+- Interval: 1 jam (60 menit) sekali.
+- Jika sudah 6 jam sejak `reminder_date` atau mencapai 6 kali pengingat: set `next_remind_at = null` → cron berhenti memproses task ini.
+- Jika task di-`done`, `hold`, atau `cancel`: cron query otomatis skip karena filter `status = 'to_do'`.
 - Jika `reminder_date` diubah lewat edit: reset `next_remind_at = reminder_date_baru`, `reminder_count = 0`.
 
 ### Cron Query
@@ -217,7 +232,7 @@ todo-pwa/
 SELECT tasks.*, telegram_connections.telegram_chat_id
 FROM tasks
 JOIN telegram_connections ON tasks.user_id = telegram_connections.user_id
-WHERE tasks.status IN ('to_do', 'hold')
+WHERE tasks.status = 'to_do'
   AND tasks.next_remind_at <= NOW()
   AND tasks.next_remind_at IS NOT NULL
   AND telegram_connections.is_connected = true;

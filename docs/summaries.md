@@ -52,7 +52,7 @@ User (Browser/Mobile)
         └── API Routes Next.js → /api/tasks, /api/webhook/telegram
 
 Cron Job (Upstash Workflow, tiap 1-5 menit)
-  └── Query tasks WHERE next_remind_at <= NOW() AND status IN ('to_do','hold')
+  └── Query tasks WHERE next_remind_at <= NOW() AND status = 'to_do'
         └── Edge Function → format pesan HTML → kirim via Telegram Bot API
               └── Update next_remind_at di DB
 
@@ -122,7 +122,7 @@ Telegram Bot (grammY)
 
 ### Kirim Reminder
 1. Cron Job (Upstash) trigger tiap 1–5 menit
-2. Query DB: tasks dengan `next_remind_at <= NOW()`, status `to_do` atau `hold`
+2. Query DB: tasks dengan `next_remind_at <= NOW()`, status `to_do`
 3. Edge Function format pesan HTML + inline button
 4. Kirim via Telegram Bot API
 5. Update `next_remind_at`, `reminder_count`, `last_reminded_at` di DB

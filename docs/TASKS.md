@@ -115,7 +115,7 @@
 
 ### Cron Trigger (Kirim Reminder)
 - [ ] Buat `src/app/api/remind/route.ts` — query tasks jatuh tempo, kirim via Bot API, update DB
-- [ ] Pastikan query: `next_remind_at <= NOW()`, status `to_do`/`hold`, `is_connected = true`
+- [ ] Pastikan query: `next_remind_at <= NOW()`, status `to_do`, `is_connected = true`
 - [ ] Pastikan update setelah kirim: increment `reminder_count`, set `last_reminded_at`, kalkulasi `next_remind_at` baru
 - [ ] Pastikan `next_remind_at = null` jika sudah 24 jam (reminder berhenti)
 

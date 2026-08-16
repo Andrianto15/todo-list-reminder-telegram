@@ -52,7 +52,7 @@ export async function POST() {
     .from('tasks')
     .select('*')
     .in('user_id', userIds)
-    .in('status', ['to_do', 'hold'])
+    .eq('status', 'to_do')
     .lte('next_remind_at', now);
 
   if (error) {
