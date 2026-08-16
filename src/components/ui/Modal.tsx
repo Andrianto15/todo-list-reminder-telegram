@@ -27,17 +27,17 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
 
           {/* Modal Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ type: 'spring', duration: 0.25 }}
-            className="relative bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 dark:border-slate-700 space-y-4 z-10 text-gray-900 dark:text-slate-100"
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            className="relative bg-white dark:bg-slate-800 rounded-[5px] max-w-md w-full p-6 shadow-lg border border-[#ebebeb] dark:border-slate-700 space-y-4 z-10 text-[#404040] dark:text-slate-100"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{title}</h3>
+              <h3 className="text-base font-light text-[#404040] dark:text-slate-100">{title}</h3>
               <button
                 onClick={onClose}
-                className="text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-200 rounded-xl p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+                className="text-[#737373] dark:text-slate-400 hover:text-[#404040] dark:hover:text-slate-200 rounded-[5px] p-1.5 hover:bg-[#ebebeb]/50 dark:hover:bg-slate-700 transition"
                 aria-label="Tutup modal"
               >
                 <X size={18} />

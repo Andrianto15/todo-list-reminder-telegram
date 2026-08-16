@@ -84,7 +84,7 @@ export default function DashboardPage() {
   }, [displayedTasks]);
 
   return (
-    <div className="min-h-screen bg-gray-50/50 dark:bg-slate-900 transition-colors">
+    <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors">
       <Navbar />
       <div className="max-w-lg mx-auto px-4 py-6 pb-24">
         {loading ? (
@@ -105,7 +105,7 @@ export default function DashboardPage() {
             />
 
             {filteredTasks.length === 0 ? (
-              <div className="text-center py-12 text-xs text-gray-400 dark:text-slate-500">
+              <div className="text-center py-12 text-xs text-[#737373] dark:text-slate-500">
                 Tidak ada pengingat yang cocok dengan pencarian / filter.
               </div>
             ) : (
@@ -125,7 +125,7 @@ export default function DashboardPage() {
                   <div className="mt-2 mb-4 flex justify-center">
                     <button
                       onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                      className="w-full py-3 px-4 rounded-2xl text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50/70 hover:bg-indigo-100/80 dark:bg-indigo-950/50 dark:hover:bg-indigo-900/60 border border-indigo-100 dark:border-indigo-900/60 transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.99]"
+                      className="w-full py-2.5 px-4 rounded-[5px] text-[13px] font-medium text-[#0051c3] dark:text-blue-400 bg-[#eef4fc] hover:bg-[#e0ecfb] dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-[#0051c3]/20 dark:border-blue-900/60 transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.99]"
                     >
                       <span>Load More...</span>
                       <ChevronDown size={14} />

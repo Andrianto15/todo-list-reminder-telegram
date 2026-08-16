@@ -56,22 +56,22 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
     <Modal open={true} onClose={onClose} title="Edit Task">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Judul Task *</label>
+          <label className="block text-xs font-normal text-[#404040] dark:text-slate-300 mb-1">Judul Task *</label>
           <input
             type="text"
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full border border-[#ebebeb] dark:border-slate-700 rounded-[5px] px-3 py-2 text-[13px] text-[#404040] dark:text-slate-100 bg-white dark:bg-slate-900 placeholder:text-[#a3a3a3] dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-[#0051c3]/20 focus:border-[#0051c3]"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Status</label>
+          <label className="block text-xs font-normal text-[#404040] dark:text-slate-300 mb-1">Status</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as TaskStatus)}
-            className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-gray-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white dark:bg-slate-900"
+            className="w-full border border-[#ebebeb] dark:border-slate-700 rounded-[5px] px-3 py-2 text-[13px] text-[#404040] dark:text-slate-100 outline-none focus:ring-2 focus:ring-[#0051c3]/20 focus:border-[#0051c3] bg-white dark:bg-slate-900"
           >
             <option value="to_do">To Do</option>
             <option value="hold">Hold (Ditunda)</option>
@@ -81,36 +81,35 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Tanggal & Waktu Pengingat *</label>
+          <label className="block text-xs font-normal text-[#404040] dark:text-slate-300 mb-1">Tanggal & Waktu Pengingat *</label>
           <input
             type="datetime-local"
             required
             value={reminderDate}
             onChange={(e) => setReminderDate(e.target.value)}
-            className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+            className="w-full border border-[#ebebeb] dark:border-slate-700 rounded-[5px] px-3 py-2 text-[13px] text-[#404040] dark:text-slate-100 bg-white dark:bg-slate-900 outline-none focus:ring-2 focus:ring-[#0051c3]/20 focus:border-[#0051c3]"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Catatan</label>
+          <label className="block text-xs font-normal text-[#404040] dark:text-slate-300 mb-1">Catatan</label>
           <textarea
             placeholder="Tambah catatan detail..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            className="w-full border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none"
+            className="w-full border border-[#ebebeb] dark:border-slate-700 rounded-[5px] px-3 py-2 text-[13px] text-[#404040] dark:text-slate-100 bg-white dark:bg-slate-900 placeholder:text-[#a3a3a3] dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-[#0051c3]/20 focus:border-[#0051c3] resize-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading || !title.trim() || !reminderDate}
-          className="w-full bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition shadow-sm shadow-indigo-200 dark:shadow-none"
+          className="w-full bg-[#0051c3] hover:bg-[#0041a8] text-white rounded-[5px] py-2 text-[13px] font-medium disabled:opacity-50 transition shadow-xs"
         >
           {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
         </button>
       </form>
     </Modal>
-
   );
 }

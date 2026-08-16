@@ -159,5 +159,30 @@
 - Memperbarui versi PRD menjadi v3.2.
 - Memperbarui item spesifikasi **FR-4.4** (Format waktu UTC+7), **FR-4.5** (Inline keyboard Done, Hold, Cancel), dan **FR-4.6** (Webhook status handling).
 
+---
 
+## Ringkasan Perubahan: Implementasi Design System & Tokens (docs/DESIGN.md)
 
+### 1. Global Design Tokens & Typography (`src/app/globals.css`, `src/app/layout.tsx`)
+- Mengintegrasikan design tokens dari `docs/DESIGN.md`:
+  - **Colors**: Primary `#0051c3` (Cobalt/Royal Blue), Background `#ffffff`, Foreground text `#404040`, Surface `#ebebeb`, Border `#ebebeb`, Text Muted `#737373`.
+  - **Typography**: Font family `-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Helvetica Neue, Arial, sans-serif`. Body text `13px` / line-height 1.5 / weight 400. Headings weight `300`.
+  - **Spacing & Radius**: Spacing base `3px`, corner radius `5px` (`rounded-[5px]`).
+  - **Motion & Transitions**: Durasi `150ms ease` untuk seluruh elemen interaktif dan transisi tema.
+
+### 2. UI Components & Layouts (Mobile-First)
+- **Navbar (`src/components/ui/Navbar.tsx`)**: Menggunakan border `#ebebeb`, badge aksen `#0051c3`, radius `5px`, text `#404040`.
+- **TaskStats (`src/components/tasks/TaskStats.tsx`)**: Header font weight `300`, gradient background `#0051c3` ke `#0041a8`, radius `5px`, transition `150ms ease`.
+- **Top3Highlight (`src/components/tasks/Top3Highlight.tsx`)**: Card border `#ebebeb`, text title `#404040`, text time `#0051c3`, radius `5px`.
+- **TaskFilter (`src/components/tasks/TaskFilter.tsx`)**: Tab aktif `#0051c3`, input search border `#ebebeb` dan focus border `#0051c3`, radius `5px`.
+- **TaskCard (`src/components/tasks/TaskCard.tsx`)**: Typography `13px`, border `#ebebeb`, check button hover `#0051c3`, action button icons hover `#0051c3`, radius `5px`.
+- **StatusBadge (`src/components/tasks/StatusBadge.tsx`)**: Badge `to_do` berlatar `#eef4fc` dengan teks `#0051c3`, radius `5px`.
+- **Modals & Dialogs (`AddTaskModal.tsx`, `EditTaskModal.tsx`, `Modal.tsx`, `ConfirmDialog.tsx`)**: Border `#ebebeb`, radius `5px`, primary buttons `#0051c3`, focus ring `#0051c3`.
+- **FAB (`src/components/ui/FAB.tsx`) & EmptyState (`src/components/ui/EmptyState.tsx`)**: Button dan ikon beraksen `#0051c3`, radius `5px`.
+- **Pages (`dashboard/page.tsx`, `settings/telegram/page.tsx`, `login/page.tsx`, `register/page.tsx`)**: Menyelaraskan background `#ffffff`, border `#ebebeb`, tombol dan link `#0051c3`.
+
+### 3. Automated Testing (`tests/designTokens.test.ts`)
+- Menambahkan test suite pengujian Jest untuk memastikan keselarasan file `docs/DESIGN.md`, `src/app/globals.css`, dan `src/app/layout.tsx`.
+
+### 4. Dokumentasi (`docs/PRD.md`)
+- Update versi dokumen PRD menjadi v3.3 dan menambahkan klausul **FR-1.4 Design System & Token Integration**.
