@@ -11,6 +11,7 @@ describe('Telegram Reminder Helper', () => {
     reminder_date: new Date().toISOString(),
     next_remind_at: new Date().toISOString(),
     reminder_count: 0,
+    last_reminded_at: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

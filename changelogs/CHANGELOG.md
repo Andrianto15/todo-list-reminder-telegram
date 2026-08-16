@@ -1,5 +1,13 @@
 # Changelog
 
+## 16/08/2026 - v0.2.4
+
+- **Task Summary Filter & Total Done Badge**:
+  - Filter summary progres hanya menghitung task hari ini + task sebelum/sesudahnya yang belum `done`.
+  - Tambah badge terpisah untuk menampilkan total seluruh task yang berstatus `done`.
+  - Tambah unit test Jest di `tests/taskStats.test.ts`.
+  - Update `docs/PRD.md` (FR-3.3).
+
 ## 16/08/2026 - v0.2.3
 
 - **Refactor Reminder Interval & Limit**:
