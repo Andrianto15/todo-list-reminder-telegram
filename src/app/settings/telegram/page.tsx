@@ -19,62 +19,62 @@ export default function TelegramSettingsPage() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       <Navbar />
       <div className="max-w-lg mx-auto px-4 py-8">
         <div className="flex items-center gap-2 mb-6">
-          <Send className="text-indigo-600" size={22} />
-          <h1 className="text-lg font-bold text-gray-900">Integrasi Telegram</h1>
+          <Send className="text-[#0051c3] dark:text-blue-400" size={20} />
+          <h1 className="text-lg font-light text-[#404040] dark:text-slate-100">Integrasi Telegram</h1>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-12 text-sm text-gray-400 gap-2">
-            <Loader2 size={18} className="animate-spin text-indigo-600" />
+          <div className="flex items-center justify-center py-12 text-xs text-[#737373] dark:text-slate-400 gap-2">
+            <Loader2 size={16} className="animate-spin text-[#0051c3] dark:text-blue-400" />
             <span>Memuat status koneksi...</span>
           </div>
         ) : conn?.is_connected ? (
-          <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-2xl p-5 space-y-2.5 shadow-sm">
+          <div className="bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 rounded-[5px] p-5 space-y-2.5 shadow-xs">
             <div className="flex items-center gap-2">
-              <CheckCircle2 size={20} className="text-emerald-600" />
-              <p className="text-sm font-semibold text-emerald-900">Telegram Terhubung</p>
+              <CheckCircle2 size={18} className="text-emerald-600 dark:text-emerald-400" />
+              <p className="text-xs font-semibold text-emerald-900 dark:text-emerald-200">Telegram Terhubung</p>
             </div>
-            <p className="text-xs text-emerald-700 leading-relaxed">
+            <p className="text-xs text-emerald-700 dark:text-emerald-300 leading-relaxed">
               Notifikasi pengingat akan dikirimkan otomatis ke Telegram Chat ID:{' '}
-              <code className="font-mono bg-emerald-100/90 px-2 py-0.5 rounded-md text-emerald-900 font-bold">
+              <code className="font-mono bg-emerald-100/90 dark:bg-emerald-900/60 px-2 py-0.5 rounded-[5px] text-emerald-900 dark:text-emerald-200 font-bold">
                 {conn.telegram_chat_id}
               </code>
             </p>
           </div>
         ) : (
-          <div className="space-y-5 bg-white border border-gray-100 p-6 rounded-3xl shadow-sm">
+          <div className="space-y-5 bg-white dark:bg-slate-800 border border-[#ebebeb] dark:border-slate-700 p-6 rounded-[5px] shadow-xs">
             <div className="flex items-start gap-3">
-              <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-2xl">
-                <ShieldCheck size={22} />
+              <div className="p-2 bg-[#eef4fc] dark:bg-blue-950/60 text-[#0051c3] dark:text-blue-400 rounded-[5px]">
+                <ShieldCheck size={20} />
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-xs text-[#737373] dark:text-slate-300 leading-relaxed">
                 Hubungkan akun Telegram Anda untuk menerima pesan pengingat tugas harian secara otomatis.
               </p>
             </div>
 
-            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-2.5">
-              <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">Langkah-langkah:</p>
-              <ol className="text-xs text-gray-600 space-y-2 list-decimal list-inside leading-relaxed">
+            <div className="bg-[#ebebeb]/30 dark:bg-slate-800/60 border border-[#ebebeb] dark:border-slate-700 rounded-[5px] p-4 space-y-2.5">
+              <p className="text-xs font-semibold text-[#404040] dark:text-slate-200 uppercase tracking-wider">Langkah-langkah:</p>
+              <ol className="text-xs text-[#737373] dark:text-slate-300 space-y-2 list-decimal list-inside leading-relaxed">
                 <li>Klik tombol di bawah untuk membuat <b>Token Koneksi</b>.</li>
                 <li>Buka Telegram Bot Anda.</li>
-                <li>Kirim pesan dengan format: <code className="bg-gray-200 px-1.5 py-0.5 rounded font-mono text-gray-800">/start TOKEN_ANDA</code></li>
+                <li>Kirim pesan dengan format: <code className="bg-[#ebebeb] dark:bg-slate-700 px-1.5 py-0.5 rounded-[5px] font-mono text-[#404040] dark:text-slate-200">/start TOKEN_ANDA</code></li>
               </ol>
             </div>
 
             {conn?.connect_token && (
-              <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4 space-y-2">
-                <p className="text-xs font-medium text-indigo-600">Token Koneksi Anda:</p>
-                <div className="flex items-center justify-between gap-2 bg-white border border-indigo-200/80 rounded-xl p-2.5 px-3 shadow-xs">
-                  <code className="text-sm font-mono font-bold text-indigo-900 break-all">
+              <div className="bg-[#eef4fc] dark:bg-blue-950/40 border border-[#0051c3]/20 dark:border-blue-900/60 rounded-[5px] p-4 space-y-2">
+                <p className="text-xs font-medium text-[#0051c3] dark:text-blue-400">Token Koneksi Anda:</p>
+                <div className="flex items-center justify-between gap-2 bg-white dark:bg-slate-900 border border-[#ebebeb] dark:border-slate-700 rounded-[5px] p-2.5 px-3 shadow-xs">
+                  <code className="text-xs font-mono font-bold text-[#0051c3] dark:text-blue-300 break-all">
                     /start {conn.connect_token}
                   </code>
                   <button
                     onClick={() => copyToClipboard(`/start ${conn.connect_token}`)}
-                    className="text-xs text-indigo-600 font-medium hover:text-indigo-800 transition flex items-center gap-1 flex-shrink-0 bg-indigo-50 hover:bg-indigo-100/80 px-2.5 py-1 rounded-lg"
+                    className="text-xs text-[#0051c3] dark:text-blue-400 font-medium hover:text-[#0041a8] transition flex items-center gap-1 flex-shrink-0 bg-[#eef4fc] hover:bg-[#e0ecfb] dark:bg-blue-950 dark:hover:bg-blue-900 px-2.5 py-1 rounded-[5px]"
                   >
                     {copied ? (
                       <>
@@ -95,7 +95,7 @@ export default function TelegramSettingsPage() {
             <button
               onClick={generateToken}
               disabled={generating}
-              className="w-full bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition shadow-sm shadow-indigo-200 flex items-center justify-center gap-2"
+              className="w-full bg-[#0051c3] hover:bg-[#0041a8] text-white rounded-[5px] py-2.5 text-[13px] font-medium disabled:opacity-50 transition shadow-xs flex items-center justify-center gap-2"
             >
               {generating ? (
                 <>

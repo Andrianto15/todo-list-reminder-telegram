@@ -22,10 +22,10 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 sticky top-0 z-30 transition-colors">
+    <nav className="bg-white dark:bg-slate-900 border-b border-[#ebebeb] dark:border-slate-800 sticky top-0 z-30 transition-colors">
       <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl overflow-hidden shadow-sm shadow-indigo-200 dark:shadow-none group-hover:scale-105 transition-transform flex items-center justify-center bg-indigo-50 dark:bg-slate-800 border border-indigo-100/50 dark:border-slate-700/50">
+          <div className="w-8 h-8 rounded-[5px] overflow-hidden shadow-xs group-hover:opacity-90 transition-opacity flex items-center justify-center bg-[#eef4fc] dark:bg-slate-800 border border-[#ebebeb] dark:border-slate-700">
             <Image
               src="/icons/logo.png"
               alt="Todo Reminder Logo"
@@ -35,7 +35,7 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className="font-semibold text-sm text-gray-900 dark:text-slate-100 tracking-tight">
+          <span className="font-semibold text-[13px] text-[#404040] dark:text-slate-100 tracking-tight">
             Todo Reminder
           </span>
         </Link>
@@ -43,19 +43,19 @@ export default function Navbar() {
         <div className="flex items-center gap-1.5">
           <Link
             href="/settings/telegram"
-            className={`text-xs font-medium px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 ${
+            className={`text-xs font-medium px-3 py-1.5 rounded-[5px] transition flex items-center gap-1.5 ${
               pathname === '/settings/telegram'
-                ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-semibold'
-                : 'text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                ? 'bg-[#eef4fc] dark:bg-blue-950/60 text-[#0051c3] dark:text-blue-400 font-semibold'
+                : 'text-[#404040] dark:text-slate-300 hover:bg-[#ebebeb]/50 dark:hover:bg-slate-800'
             }`}
           >
-            <Send size={14} className={pathname === '/settings/telegram' ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400 dark:text-slate-400'} />
+            <Send size={14} className={pathname === '/settings/telegram' ? 'text-[#0051c3] dark:text-blue-400' : 'text-[#737373] dark:text-slate-400'} />
             <span>Telegram</span>
           </Link>
 
           <button
             onClick={toggleTheme}
-            className="text-gray-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800"
+            className="text-[#737373] dark:text-slate-400 hover:text-[#0051c3] dark:hover:text-blue-400 transition p-2 rounded-[5px] hover:bg-[#ebebeb]/50 dark:hover:bg-slate-800"
             title={theme === 'light' ? 'Mode Gelap' : 'Mode Terang'}
             aria-label="Toggle Theme"
           >
@@ -64,7 +64,7 @@ export default function Navbar() {
 
           <button
             onClick={handleLogout}
-            className="text-gray-400 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/40"
+            className="text-[#737373] dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition p-2 rounded-[5px] hover:bg-red-50 dark:hover:bg-red-950/40"
             title="Keluar"
           >
             <LogOut size={16} />

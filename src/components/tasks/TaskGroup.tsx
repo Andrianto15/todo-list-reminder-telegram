@@ -19,7 +19,7 @@ export default function TaskGroup({
 }: Props) {
   return (
     <div className="mb-6">
-      <h3 className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-1">
+      <h3 className="text-xs font-light text-[#737373] dark:text-slate-400 uppercase tracking-wider mb-2 px-1">
         {formatDateGroupHeader(date)}
       </h3>
       <div className="space-y-2">

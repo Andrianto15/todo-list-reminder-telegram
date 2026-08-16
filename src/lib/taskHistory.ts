@@ -1,6 +1,6 @@
 import { Task } from '@/types';
 import { format } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { id } from 'date-fns/locale';
 
 /**
  * Mengurutkan task dari yang terbaru ke terlama berdasarkan reminder_date
@@ -33,13 +33,13 @@ export function groupTasksByDate(tasks: Task[]): Record<string, Task[]> {
 }
 
 /**
- * Format header tanggal kelompok task ke bahasa Inggris dengan tahun.
- * Contoh output: "Monday, 3 Aug 2026" (dapat diubah jadi UPPERCASE di CSS atau UI)
+ * Format header tanggal kelompok task ke bahasa Indonesia dengan tahun.
+ * Contoh output: "Minggu, 16 Agt 2026" (dapat diubah jadi UPPERCASE di CSS atau UI)
  */
 export function formatDateGroupHeader(dateStr: string): string {
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) {
     return dateStr;
   }
-  return format(date, 'EEEE, d MMM yyyy', { locale: enUS });
+  return format(date, 'EEEE, d MMM yyyy', { locale: id });
 }

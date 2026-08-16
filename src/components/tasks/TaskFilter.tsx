@@ -32,19 +32,19 @@ export default function TaskFilter({
       <div className="relative">
         <Search
           size={16}
-          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500"
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#737373] dark:text-slate-500"
         />
         <input
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Cari tugas..."
-          className="w-full bg-white dark:bg-slate-800 border border-gray-200/80 dark:border-slate-700 rounded-2xl pl-10 pr-9 py-2 text-xs text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition shadow-xs"
+          className="w-full bg-white dark:bg-slate-800 border border-[#ebebeb] dark:border-slate-700 rounded-[5px] pl-10 pr-9 py-2 text-[13px] text-[#404040] dark:text-slate-100 placeholder:text-[#a3a3a3] dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-[#0051c3]/20 focus:border-[#0051c3] transition shadow-xs"
         />
         {search && (
           <button
             onClick={() => onSearchChange('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 p-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#737373] dark:text-slate-500 hover:text-[#404040] dark:hover:text-slate-300 p-0.5 rounded-[5px] hover:bg-[#ebebeb]/50 dark:hover:bg-slate-700 transition"
           >
             <X size={14} />
           </button>
@@ -60,18 +60,18 @@ export default function TaskFilter({
             <button
               key={f.id}
               onClick={() => onStatusFilterChange(f.id)}
-              className={`px-3 py-1.5 rounded-xl font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-[5px] font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
                 isActive
-                  ? 'bg-indigo-600 text-white shadow-xs shadow-indigo-200 dark:shadow-none'
-                  : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border border-gray-200/70 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/60'
+                  ? 'bg-[#0051c3] text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-[#404040] dark:text-slate-300 border border-[#ebebeb] dark:border-slate-700 hover:bg-[#ebebeb]/50 dark:hover:bg-slate-700/60'
               }`}
             >
               <span>{f.label}</span>
               <span
-                className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                className={`text-[10px] px-1.5 py-0.2 rounded-[5px] font-bold ${
                   isActive
-                    ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-slate-400'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-[#ebebeb] dark:bg-slate-700 text-[#737373] dark:text-slate-400'
                 }`}
               >
                 {count}
