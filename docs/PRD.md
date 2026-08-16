@@ -2,7 +2,7 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.1
+* **Version:** 3.2
 * **Date:** 16 Agustus 2026
 * **Author:** Project Owner
 * **Changelog:**
@@ -10,6 +10,7 @@
   * v2.0 — Tambah auth, soft delete, persistent reminder, pisah tabel `telegram_connections`
   * v3.0 — Tambah detail API routes, struktur folder, flow koneksi Telegram, catatan teknis deployment
   * v3.1 — Update branding maskot aplikasi (Favicon browser, PWA home screen icons 192x192 & 512x512, dan Navbar logo)
+  * v3.2 — Format waktu reminder Telegram UTC+7 (WIB) & penambahan inline keyboard Done, Hold, Cancel
 
 ---
 
@@ -88,10 +89,13 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-4.2 Automated Alert:** Sistem otomatis mengirimkan reminder ke Telegram user tepat pada `reminder_date`.
 * **FR-4.3 Persistent Reminder:** Setelah reminder pertama terkirim, sistem mengirim ulang secara otomatis dengan interval:
   * **1 jam** sekali.
-  * **Berhenti otomatis** setelah 6 jam / maksimal 6 kali pengingat, atau jika task di-mark `done`.
-* **FR-4.4 Message Design:** Pesan Telegram menggunakan format HTML dengan header urgensi, judul bold, tanggal & waktu, dan catatan.
-* **FR-4.5 Interactive Inline Button:** Setiap pesan reminder menyertakan tombol **"✅ Tandai Selesai"**.
-* **FR-4.6 Webhook Status Update:** Klik tombol di Telegram → Webhook → update status task jadi `done` di DB → konfirmasi di Telegram. User tidak perlu membuka app PWA.
+  * **Berhenti otomatis** setelah 6 jam / maksimal 6 kali pengingat, atau jika status task diubah menjadi `done`, `hold`, atau `cancel`.
+* **FR-4.4 Message Design:** Pesan Telegram menggunakan format HTML dengan header urgensi, judul bold, tanggal & waktu dalam zona waktu **UTC+7 (Asia/Jakarta / WIB)** (`EEEE, d MMMM yyyy · HH:mm`), dan catatan.
+* **FR-4.5 Interactive Inline Buttons:** Setiap pesan reminder menyertakan baris tombol interaktif:
+  * `✅ Done` — Mengubah status task menjadi `done` dan menghentikan pengingat.
+  * `⏸️ Hold` — Mengubah status task menjadi `hold` (ditangguhkan) dan menghentikan pengingat.
+  * `❌ Cancel` — Mengubah status task menjadi `cancel` (dibatalkan) dan menghentikan pengingat.
+* **FR-4.6 Webhook Status Update:** Klik tombol di Telegram → Webhook memproses callback query (`done:id`, `hold:id`, `cancel:id`) → update status task dan set `next_remind_at = null` di database Supabase → notifikasi toast/popup Telegram + update label status pada pesan Telegram. User tidak perlu membuka app PWA.
 
 ---
 

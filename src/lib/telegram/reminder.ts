@@ -1,6 +1,4 @@
 import { Task, TaskStatus } from '@/types';
-import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
 
 const HOURLY_INTERVAL_MINUTES = 60;
 const MAX_REMINDER_HOURS = 6;
@@ -23,6 +21,27 @@ export function getNextRemindAt(task: Task): Date | null {
   return new Date(now.getTime() + HOURLY_INTERVAL_MINUTES * 60 * 1000);
 }
 
+export function formatReminderDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  const parts = new Intl.DateTimeFormat('id-ID', {
+    timeZone: 'Asia/Jakarta',
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    hourCycle: 'h23',
+  }).formatToParts(d);
+
+  const map: Record<string, string> = {};
+  for (const p of parts) {
+    map[p.type] = p.value;
+  }
+  return `${map.weekday}, ${map.day} ${map.month} ${map.year} · ${map.hour}:${map.minute}`;
+}
+
 export function formatReminderMessage(task: Task): string {
   const urgencyEmoji = task.reminder_count === 0 ? '🔔' : task.reminder_count <= 3 ? '⚠️' : '🚨';
   const reminderText = task.reminder_count > 0 ? `\n<i>Pengingat ke-${task.reminder_count + 1}</i>` : '';
@@ -31,7 +50,7 @@ export function formatReminderMessage(task: Task): string {
 
 📌 <b>${task.title}</b>
 
-🕐 ${format(new Date(task.reminder_date), "EEEE, d MMMM yyyy · HH:mm", { locale: id })}${
+🕐 ${formatReminderDate(task.reminder_date)}${
     task.notes ? `\n\n📝 ${task.notes}` : ''
   }`;
 }
@@ -40,7 +59,9 @@ export function getReminderInlineKeyboard(taskId: string) {
   return {
     inline_keyboard: [
       [
-        { text: '✅ Tandai Selesai', callback_data: `done:${taskId}` },
+        { text: '✅ Done', callback_data: `done:${taskId}` },
+        { text: '⏸️ Hold', callback_data: `hold:${taskId}` },
+        { text: '❌ Cancel', callback_data: `cancel:${taskId}` },
       ],
     ],
   };

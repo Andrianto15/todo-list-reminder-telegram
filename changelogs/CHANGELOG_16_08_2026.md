@@ -133,4 +133,31 @@
 ### 4. Dokumentasi (`docs/PRD.md`, `docs/summaries.md`, `docs/TASKS.md`)
 - Memperbarui bagian *Persistent Reminder Logic* dan *Cron Query* di `docs/PRD.md` serta dokumen terkait agar konsisten dengan filter status `to_do`.
 
+---
+
+## Ringkasan Perubahan: Notifikasi Telegram UTC+7 & Inline Keyboard Status (Done, Hold, Cancel)
+
+### 1. Telegram Message Formatting (`src/lib/telegram/reminder.ts`)
+- Menambahkan fungsi helper `formatReminderDate(dateStr: string): string` menggunakan standard `Intl.DateTimeFormat` dengan zona waktu `Asia/Jakarta` (UTC+7 / WIB) dan format `EEEE, d MMMM yyyy · HH:mm`.
+- Memperbarui `formatReminderMessage` untuk menampilkan waktu reminder dalam zona waktu UTC+7.
+- Memperbarui `getReminderInlineKeyboard` untuk menyertakan 3 tombol aksi:
+  - `✅ Done` (`callback_data: done:<taskId>`)
+  - `⏸️ Hold` (`callback_data: hold:<taskId>`)
+  - `❌ Cancel` (`callback_data: cancel:<taskId>`)
+
+### 2. Telegram Webhook Callback Handler (`src/app/api/webhook/telegram/route.ts`)
+- Memperluas callback handler untuk menangani query callback `done:`, `hold:`, dan `cancel:`.
+- Mengubah status task di database Supabase sesuai tombol yang diklik (`done`, `hold`, atau `cancel`) dan mematikan pengingat berikutnya (`next_remind_at = null`).
+- Memberikan feedback callback toast dan mengupdate pesan asli Telegram dengan indikator status akhir (`✅ SUDAH SELESAI`, `⏸️ STATUS: HOLD`, atau `❌ DIBATALKAN`).
+
+### 3. Automated Testing (`tests/reminder.test.ts`)
+- Menambahkan unit test untuk konversi waktu UTC ISO ke WIB / UTC+7 (`formatReminderDate`).
+- Memperbarui test `formatReminderMessage` untuk memastikan format UTC+7.
+- Memperbarui test `getReminderInlineKeyboard` untuk memvalidasi struktur 3 tombol (`Done`, `Hold`, `Cancel`).
+
+### 4. Dokumentasi (`docs/PRD.md`)
+- Memperbarui versi PRD menjadi v3.2.
+- Memperbarui item spesifikasi **FR-4.4** (Format waktu UTC+7), **FR-4.5** (Inline keyboard Done, Hold, Cancel), dan **FR-4.6** (Webhook status handling).
+
+
 

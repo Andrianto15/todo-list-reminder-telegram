@@ -1,5 +1,6 @@
 import {
   getNextRemindAt,
+  formatReminderDate,
   formatReminderMessage,
   getReminderInlineKeyboard,
   isTaskEligibleForReminder,
@@ -24,12 +25,12 @@ describe('Telegram Reminder Helper', () => {
     title: 'Test Reminder Task',
     notes: 'Important notes',
     status: 'to_do',
-    reminder_date: new Date().toISOString(),
-    next_remind_at: new Date().toISOString(),
+    reminder_date: '2026-08-16T05:15:00.000Z',
+    next_remind_at: '2026-08-16T05:15:00.000Z',
     reminder_count: 0,
     last_reminded_at: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    created_at: '2026-08-16T00:00:00.000Z',
+    updated_at: '2026-08-16T00:00:00.000Z',
   };
 
   describe('getNextRemindAt', () => {
@@ -86,8 +87,18 @@ describe('Telegram Reminder Helper', () => {
     });
   });
 
+  describe('formatReminderDate', () => {
+    it('formats UTC ISO timestamp into UTC+7 (Asia/Jakarta) Indonesian format', () => {
+      const formatted1 = formatReminderDate('2026-08-16T05:15:00.000Z');
+      expect(formatted1).toBe('Minggu, 16 Agustus 2026 · 12:15');
+
+      const formatted2 = formatReminderDate('2026-08-16T09:00:00.000Z');
+      expect(formatted2).toBe('Minggu, 16 Agustus 2026 · 16:00');
+    });
+  });
+
   describe('formatReminderMessage', () => {
-    it('formats initial reminder message with bell icon', () => {
+    it('formats initial reminder message with bell icon and UTC+7 time', () => {
       const task: Task = {
         ...baseTask,
         reminder_count: 0,
@@ -96,6 +107,7 @@ describe('Telegram Reminder Helper', () => {
       const msg = formatReminderMessage(task);
       expect(msg).toContain('🔔 <b>Pengingat Tugas</b>');
       expect(msg).toContain('📌 <b>Test Reminder Task</b>');
+      expect(msg).toContain('🕐 Minggu, 16 Agustus 2026 · 12:15');
       expect(msg).toContain('📝 Important notes');
       expect(msg).not.toContain('Pengingat ke-');
     });
@@ -124,12 +136,13 @@ describe('Telegram Reminder Helper', () => {
   });
 
   describe('getReminderInlineKeyboard', () => {
-    it('generates inline keyboard with done action callback', () => {
+    it('generates inline keyboard with Done, Hold, and Cancel buttons', () => {
       const keyboard = getReminderInlineKeyboard('task-id-abc');
-      expect(keyboard.inline_keyboard[0][0]).toEqual({
-        text: '✅ Tandai Selesai',
-        callback_data: 'done:task-id-abc',
-      });
+      expect(keyboard.inline_keyboard[0]).toEqual([
+        { text: '✅ Done', callback_data: 'done:task-id-abc' },
+        { text: '⏸️ Hold', callback_data: 'hold:task-id-abc' },
+        { text: '❌ Cancel', callback_data: 'cancel:task-id-abc' },
+      ]);
     });
   });
 });
