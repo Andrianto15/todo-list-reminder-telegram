@@ -2,7 +2,7 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.3
+* **Version:** 3.4
 * **Date:** 16 Agustus 2026
 * **Author:** Project Owner
 * **Changelog:**
@@ -12,6 +12,7 @@
   * v3.1 — Update branding maskot aplikasi (Favicon browser, PWA home screen icons 192x192 & 512x512, dan Navbar logo)
   * v3.2 — Format waktu reminder Telegram UTC+7 (WIB) & penambahan inline keyboard Done, Hold, Cancel
   * v3.3 — Implementasi Design Tokens (`docs/DESIGN.md`): Primary `#0051c3`, font stack `-apple-system`, body `13px`/400, heading 300, surface/border `#ebebeb`, text `#404040`, radius `5px`, motion `150ms ease`.
+  * v3.4 — Update format tanggal Top 3 Highlight menyertakan tahun (`Minggu, 16 Agt 2026 · 21:30`) dan standardisasi header Task History ke format bahasa Indonesia dengan tahun (`MINGGU, 16 AGT 2026`).
 
 ---
 
@@ -78,8 +79,8 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-2.4 Cancel Task:** Tidak ada fitur hapus. Pembatalan hanya melakukan soft update status menjadi `cancel`.
 
 ### 4.4 Dashboard View
-* **FR-3.1 Grouping View:** Halaman utama menampilkan task yang dikelompokkan per hari dengan format header bahasa Inggris lengkap dengan tahun (contoh `MONDAY, 3 AUG 2026`).
-* **FR-3.2 Top 3 Highlight:** Di bagian paling atas dashboard, sistem memunculkan maksimal 3 task dengan `reminder_date` terdekat, filter status `to_do` atau `hold`, diurutkan ascending.
+* **FR-3.1 Grouping View:** Halaman utama menampilkan task yang dikelompokkan per hari dengan format header bahasa Indonesia lengkap dengan tahun (contoh `MINGGU, 16 AGT 2026`).
+* **FR-3.2 Top 3 Highlight:** Di bagian paling atas dashboard, sistem memunculkan maksimal 3 task dengan `reminder_date` terdekat, filter status `to_do` atau `hold`, diurutkan ascending, dengan format waktu bahasa Indonesia lengkap dengan tahun dan jam (contoh: `Minggu, 16 Agt 2026 · 21:30`).
 * **FR-3.3 Task Summary & Progress Calculation:** Kartu summary menampilkan progres tugas aktif yang difilter khusus:
   * Memuat semua tugas yang dijadwalkan **hari ini** (apapun statusnya).
   * Memuat tugas dari **hari sebelum/sesudahnya** yang berstatus belum selesai (`status !== 'done'`).

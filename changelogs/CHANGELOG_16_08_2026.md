@@ -186,3 +186,25 @@
 
 ### 4. Dokumentasi (`docs/PRD.md`)
 - Update versi dokumen PRD menjadi v3.3 dan menambahkan klausul **FR-1.4 Design System & Token Integration**.
+
+---
+
+## Ringkasan Perubahan: Format Tanggal Indonesia & Penambahan Tahun pada Top 3 & History (16/08/2026 - v0.3.1)
+
+### 1. UI Component (`src/components/tasks/Top3Highlight.tsx`)
+- Menambahkan token tahun (`yyyy`) pada pemformatan tanggal pengingat kartu Top 3 Highlight:
+  - Pola: `'EEEE, d MMM yyyy · HH:mm'` dengan locale `id` (date-fns).
+  - Contoh: `Minggu, 16 Agt 2026 · 21:30`.
+
+### 2. Logic & Helper (`src/lib/taskHistory.ts`)
+- Mengubah locale pemformatan header pengelompokan tanggal riwayat tugas (`formatDateGroupHeader`) dari `enUS` kembali ke `id` (bahasa Indonesia).
+  - Pola: `'EEEE, d MMM yyyy'` dengan locale `id`.
+  - Output teks: `Minggu, 16 Agt 2026` (ditransformasi menjadi `MINGGU, 16 AGT 2026` pada tampilan header UI).
+
+### 3. Automated Testing (`tests/taskHistory.test.ts`)
+- Memperbarui test suite Jest `formatDateGroupHeader` untuk memvalidasi format bahasa Indonesia dengan tahun (nama hari `Senin`, `Sabtu`, `Minggu`, bulan `Agt`, dan tahun `2026`).
+
+### 4. Dokumentasi (`docs/PRD.md`)
+- Update versi dokumen PRD menjadi v3.4.
+- Memperbarui klausul **FR-3.1 Grouping View** dan **FR-3.2 Top 3 Highlight** untuk merefleksikan format tanggal bahasa Indonesia lengkap dengan tahun.
+

@@ -87,19 +87,27 @@ describe('taskHistory helpers', () => {
   });
 
   describe('formatDateGroupHeader', () => {
-    it('memformat tanggal ke format bahasa Inggris lengkap dengan tahun', () => {
+    it('memformat tanggal ke format bahasa Indonesia lengkap dengan tahun', () => {
       const formatted1 = formatDateGroupHeader('2026-08-03T10:00:00.000Z');
-      expect(formatted1).toMatch(/Monday, \d+ Aug 2026/);
+      expect(formatted1).toMatch(/Senin, \d+ Agt 2026/);
 
       const formatted2 = formatDateGroupHeader('2026-08-15T13:00:00.000Z');
-      expect(formatted2).toMatch(/Saturday, \d+ Aug 2026/);
+      expect(formatted2).toMatch(/Sabtu, \d+ Agt 2026/);
+
+      const formatted3 = formatDateGroupHeader('2026-08-16T14:30:00.000Z');
+      expect(formatted3).toMatch(/Minggu, \d+ Agt 2026/);
     });
 
     it('menangani string tanggal format YYYY-MM-DD secara konsisten', () => {
-      // 2026-08-03 is a Monday
+      // 2026-08-03 adalah hari Senin
       const formatted = formatDateGroupHeader('2026-08-03');
-      expect(formatted).toContain('Aug 2026');
-      expect(formatted).toContain('Monday');
+      expect(formatted).toContain('Agt 2026');
+      expect(formatted).toContain('Senin');
+
+      // 2026-08-16 adalah hari Minggu
+      const formattedMinggu = formatDateGroupHeader('2026-08-16');
+      expect(formattedMinggu).toContain('Minggu');
+      expect(formattedMinggu).toContain('16 Agt 2026');
     });
 
     it('mengembalikan string asli jika input tidak valid', () => {

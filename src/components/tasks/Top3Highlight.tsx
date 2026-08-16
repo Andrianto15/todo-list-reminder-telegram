@@ -37,7 +37,7 @@ export default function Top3Highlight({ tasks }: Props) {
             </div>
             <p className="text-xs text-[#0051c3] dark:text-blue-400 font-normal mt-1.5 flex items-center gap-1">
               <Clock size={12} />
-              <span>{format(new Date(task.reminder_date), 'EEEE, d MMM · HH:mm', { locale: id })}</span>
+              <span>{format(new Date(task.reminder_date), 'EEEE, d MMM yyyy · HH:mm', { locale: id })}</span>
             </p>
           </div>
         ))}
