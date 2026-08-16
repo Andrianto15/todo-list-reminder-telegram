@@ -75,9 +75,8 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-4.1 Koneksi Akun:** User menghubungkan akun Telegram mereka melalui halaman Settings. Flow: generate token unik di app → user kirim token ke bot → bot verifikasi & simpan `telegram_chat_id`.
 * **FR-4.2 Automated Alert:** Sistem otomatis mengirimkan reminder ke Telegram user tepat pada `reminder_date`.
 * **FR-4.3 Persistent Reminder:** Setelah reminder pertama terkirim, sistem mengirim ulang secara otomatis dengan interval:
-  * **15 menit** sekali selama 1 jam pertama.
-  * **1 jam** sekali setelahnya.
-  * **Berhenti otomatis** setelah 24 jam atau jika task di-mark `done`.
+  * **1 jam** sekali.
+  * **Berhenti otomatis** setelah 6 jam / maksimal 6 kali pengingat, atau jika task di-mark `done`.
 * **FR-4.4 Message Design:** Pesan Telegram menggunakan format HTML dengan header urgensi, judul bold, tanggal & waktu, dan catatan.
 * **FR-4.5 Interactive Inline Button:** Setiap pesan reminder menyertakan tombol **"✅ Tandai Selesai"**.
 * **FR-4.6 Webhook Status Update:** Klik tombol di Telegram → Webhook → update status task jadi `done` di DB → konfirmasi di Telegram. User tidak perlu membuka app PWA.
@@ -207,8 +206,8 @@ todo-pwa/
 ### Persistent Reminder Logic
 - Saat task dibuat: `next_remind_at = reminder_date`, `reminder_count = 0`.
 - Setiap kali reminder terkirim: increment `reminder_count`, update `last_reminded_at`, kalkulasi `next_remind_at` baru.
-- Interval: 15 menit untuk 4 pengiriman pertama (1 jam), lalu 60 menit setelahnya.
-- Jika sudah 24 jam sejak `reminder_date`: set `next_remind_at = null` → cron berhenti memproses task ini.
+- Interval: 1 jam (60 menit) sekali.
+- Jika sudah 6 jam sejak `reminder_date` atau mencapai 6 kali pengingat: set `next_remind_at = null` → cron berhenti memproses task ini.
 - Jika task di-`done`: cron query otomatis skip karena filter `status IN ('to_do', 'hold')`.
 - Jika `reminder_date` diubah lewat edit: reset `next_remind_at = reminder_date_baru`, `reminder_count = 0`.
 
