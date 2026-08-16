@@ -1,10 +1,14 @@
-import { Task } from '@/types';
+import { Task, TaskStatus } from '@/types';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 
 const HOURLY_INTERVAL_MINUTES = 60;
 const MAX_REMINDER_HOURS = 6;
 const MAX_REMINDER_COUNT = 6;
+
+export function isTaskEligibleForReminder(status: TaskStatus): boolean {
+  return status === 'to_do';
+}
 
 export function getNextRemindAt(task: Task): Date | null {
   const now = new Date();

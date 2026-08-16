@@ -116,3 +116,21 @@
 - Memperbarui tabel perintah CLI dengan menambahkan script `npm test`.
 - Memperbaiki path referensi dokumentasi implementasi.
 
+---
+
+## Ringkasan Perubahan: Filter Pengingat Telegram Hanya Status 'to_do' (v0.2.8)
+
+### 1. Endpoint & Cron Logic (`src/app/api/remind/route.ts`)
+- Memperbarui query Supabase pada endpoint pengingat dari `.in('status', ['to_do', 'hold'])` menjadi `.eq('status', 'to_do')`.
+- Task dengan status `hold`, `done`, atau `cancel` tidak akan memicu notifikasi Telegram.
+
+### 2. Logic & Helper (`src/lib/telegram/reminder.ts`)
+- Menambahkan fungsi helper `isTaskEligibleForReminder(status: TaskStatus): boolean` yang mengembalikan `true` khusus untuk status `to_do`.
+
+### 3. Automated Testing (`tests/reminder.test.ts`)
+- Menambahkan unit test Jest untuk `isTaskEligibleForReminder` yang menguji status `to_do` (true) serta `hold`, `done`, dan `cancel` (false).
+
+### 4. Dokumentasi (`docs/PRD.md`, `docs/summaries.md`, `docs/TASKS.md`)
+- Memperbarui bagian *Persistent Reminder Logic* dan *Cron Query* di `docs/PRD.md` serta dokumen terkait agar konsisten dengan filter status `to_do`.
+
+

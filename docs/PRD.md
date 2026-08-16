@@ -220,7 +220,7 @@ todo-pwa/
 - Setiap kali reminder terkirim: increment `reminder_count`, update `last_reminded_at`, kalkulasi `next_remind_at` baru.
 - Interval: 1 jam (60 menit) sekali.
 - Jika sudah 6 jam sejak `reminder_date` atau mencapai 6 kali pengingat: set `next_remind_at = null` → cron berhenti memproses task ini.
-- Jika task di-`done`: cron query otomatis skip karena filter `status IN ('to_do', 'hold')`.
+- Jika task di-`done`, `hold`, atau `cancel`: cron query otomatis skip karena filter `status = 'to_do'`.
 - Jika `reminder_date` diubah lewat edit: reset `next_remind_at = reminder_date_baru`, `reminder_count = 0`.
 
 ### Cron Query
@@ -228,7 +228,7 @@ todo-pwa/
 SELECT tasks.*, telegram_connections.telegram_chat_id
 FROM tasks
 JOIN telegram_connections ON tasks.user_id = telegram_connections.user_id
-WHERE tasks.status IN ('to_do', 'hold')
+WHERE tasks.status = 'to_do'
   AND tasks.next_remind_at <= NOW()
   AND tasks.next_remind_at IS NOT NULL
   AND telegram_connections.is_connected = true;

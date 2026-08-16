@@ -1,7 +1,23 @@
-import { getNextRemindAt, formatReminderMessage, getReminderInlineKeyboard } from '@/lib/telegram/reminder';
+import {
+  getNextRemindAt,
+  formatReminderMessage,
+  getReminderInlineKeyboard,
+  isTaskEligibleForReminder,
+} from '@/lib/telegram/reminder';
 import { Task } from '@/types';
 
 describe('Telegram Reminder Helper', () => {
+  describe('isTaskEligibleForReminder', () => {
+    it('returns true only for to_do status', () => {
+      expect(isTaskEligibleForReminder('to_do')).toBe(true);
+    });
+
+    it('returns false for hold, done, and cancel statuses', () => {
+      expect(isTaskEligibleForReminder('hold')).toBe(false);
+      expect(isTaskEligibleForReminder('done')).toBe(false);
+      expect(isTaskEligibleForReminder('cancel')).toBe(false);
+    });
+  });
   const baseTask: Task = {
     id: '123e4567-e89b-12d3-a456-426614174000',
     user_id: 'user-123',
