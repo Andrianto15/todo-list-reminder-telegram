@@ -103,3 +103,16 @@
 ### 5. Dokumentasi (`docs/PRD.md`)
 
 - Menambahkan item **FR-3.4 Task Sorting & Load More Pagination** serta memperbarui **FR-3.1 Grouping View**.
+
+---
+
+## Ringkasan Perubahan: Sinkronisasi README.md & Info Vibe Coding
+
+### 1. Dokumentasi (`README.md`)
+- Menambahkan informasi identitas bahwa aplikasi dibangun dengan pendekatan **Vibe Coding**.
+- Memusatkan rincian spesifikasi kebutuhan fungsional dan aturan bisnis ke `docs/PRD.md` untuk menghindari duplikasi data.
+- Memperbarui daftar Tech Stack terkini (Next.js 16, React 19, Tailwind CSS v4, Lucide React, Framer Motion, Sonner, Jest, ts-jest).
+- Memperbarui diagram struktur direktori proyek sesuai pohon file aktual (termasuk folder `hooks/`, `tests/`, `changelogs/`).
+- Memperbarui tabel perintah CLI dengan menambahkan script `npm test`.
+- Memperbaiki path referensi dokumentasi implementasi.
+
