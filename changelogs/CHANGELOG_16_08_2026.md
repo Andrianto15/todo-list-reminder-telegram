@@ -67,3 +67,39 @@
 ### 4. Dokumentasi (`docs/PRD.md`)
 
 - Update versi dokumen menjadi v3.1 dan menambahkan item **FR-1.3 App Branding & Assets**.
+
+---
+
+## Ringkasan Perubahan: Sorting Descending, Load More Pagination (5 Data) & English Date Format - v0.2.6
+
+### 1. Logic & Helper (`src/lib/taskHistory.ts`)
+
+- Menambahkan helper:
+  - `sortTasksDescending`: Mengurutkan daftar task dari tanggal terbaru ke terlama (`reminder_date` descending).
+  - `paginateTasks`: Membatasi slice task sesuai jumlah `limit` aktif.
+  - `groupTasksByDate`: Mengelompokkan task per hari dengan urutan descending.
+  - `formatDateGroupHeader`: Memformat tanggal ke bahasa Inggris lengkap dengan tahun (`EEEE, d MMM yyyy`, contoh: `Monday, 3 Aug 2026` / `MONDAY, 3 AUG 2026`).
+
+### 2. UI & Dashboard (`src/app/dashboard/page.tsx` & `src/components/tasks/TaskGroup.tsx`)
+
+- Membatasi tampilan awal maksimal 5 task teratas.
+- Menambahkan tombol aksi mobile-first **"Load More..."** di bawah list task jika ada data berikutnya (bertambah +5 per klik).
+- Tombol otomatis disembunyikan ketika seluruh data sudah ditampilkan.
+- Reset counter tampilan ke 5 setiap kali filter status atau pencarian diubah.
+- Mengubah format header group tanggal menjadi format bahasa Inggris dan menyertakan tahun.
+
+### 3. Server API (`src/app/api/tasks/route.ts`)
+
+- Mengubah sorting query Supabase default menjadi `.order('reminder_date', { ascending: false })`.
+
+### 4. Automated Testing (`tests/taskHistory.test.ts`)
+
+- Menambahkan unit test Jest untuk verifikasi:
+  - Sorting descending.
+  - Slicing pagination / load more kelipatan 5.
+  - Grouping task per tanggal descending.
+  - Format header tanggal bahasa Inggris dengan tahun.
+
+### 5. Dokumentasi (`docs/PRD.md`)
+
+- Menambahkan item **FR-3.4 Task Sorting & Load More Pagination** serta memperbarui **FR-3.1 Grouping View**.

@@ -70,13 +70,18 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-2.4 Cancel Task:** Tidak ada fitur hapus. Pembatalan hanya melakukan soft update status menjadi `cancel`.
 
 ### 4.4 Dashboard View
-* **FR-3.1 Grouping View:** Halaman utama menampilkan task yang dikelompokkan per hari (Hari Ini, Besok, Rabu 11 Juni, dst).
+* **FR-3.1 Grouping View:** Halaman utama menampilkan task yang dikelompokkan per hari dengan format header bahasa Inggris lengkap dengan tahun (contoh `MONDAY, 3 AUG 2026`).
 * **FR-3.2 Top 3 Highlight:** Di bagian paling atas dashboard, sistem memunculkan maksimal 3 task dengan `reminder_date` terdekat, filter status `to_do` atau `hold`, diurutkan ascending.
 * **FR-3.3 Task Summary & Progress Calculation:** Kartu summary menampilkan progres tugas aktif yang difilter khusus:
   * Memuat semua tugas yang dijadwalkan **hari ini** (apapun statusnya).
   * Memuat tugas dari **hari sebelum/sesudahnya** yang berstatus belum selesai (`status !== 'done'`).
   * Tugas selesai (`done`) dari luar hari ini tidak dihitung dalam progress harian.
   * Menyediakan **badge / section terpisah** yang menghitung akumulasi seluruh tugas berstatus `done` di aplikasi untuk memudahkan monitoring.
+* **FR-3.4 Task Sorting & Load More Pagination:**
+  * Data task diurutkan secara **descending** (dari yang terbaru ke terlama berdasarkan `reminder_date`).
+  * Tampilan awal membatasi maksimal 5 data teratas.
+  * Menyediakan tombol aksi mobile-first **"Load More..."** di bagian bawah daftar untuk memuat 5 data berikutnya secara bertahap hingga seluruh data ditampilkan.
+  * Reset limit tampilan kembali ke 5 setiap kali filter status atau query pencarian berubah.
 
 ### 4.5 Telegram Bot Integration & Persistent Reminder
 * **FR-4.1 Koneksi Akun:** User menghubungkan akun Telegram mereka melalui halaman Settings. Flow: generate token unik di app → user kirim token ke bot → bot verifikasi & simpan `telegram_chat_id`.

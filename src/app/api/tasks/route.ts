@@ -16,7 +16,7 @@ export async function GET() {
     .from('tasks')
     .select('*')
     .eq('user_id', user.id)
-    .order('reminder_date', { ascending: true });
+    .order('reminder_date', { ascending: false });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

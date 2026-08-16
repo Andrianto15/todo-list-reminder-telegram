@@ -2,8 +2,12 @@
 
 import { useState, useMemo } from 'react';
 import { Task, TaskStatus } from '@/types';
-import { format } from 'date-fns';
 import { useTasks } from '@/hooks/useTasks';
+import {
+  sortTasksDescending,
+  paginateTasks,
+  groupTasksByDate,
+} from '@/lib/taskHistory';
 import TaskStats from '@/components/tasks/TaskStats';
 import Top3Highlight from '@/components/tasks/Top3Highlight';
 import TaskGroup from '@/components/tasks/TaskGroup';
@@ -15,6 +19,9 @@ import TaskSkeleton from '@/components/ui/TaskSkeleton';
 import FAB from '@/components/ui/FAB';
 import EmptyState from '@/components/ui/EmptyState';
 import Navbar from '@/components/ui/Navbar';
+import { ChevronDown } from 'lucide-react';
+
+const PAGE_SIZE = 5;
 
 export default function DashboardPage() {
   const { tasks, loading, addTask, updateStatus, editTask, deleteTask } = useTasks();
@@ -25,16 +32,28 @@ export default function DashboardPage() {
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<TaskStatus | 'all'>('all');
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  // Filter tasks berdasarkan query pencarian dan tab status
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  const handleStatusFilterChange = (value: TaskStatus | 'all') => {
+    setStatusFilter(value);
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  // Filter tasks berdasarkan query pencarian dan tab status, lalu urutkan descending (terbaru ke terlama)
   const filteredTasks = useMemo(() => {
-    return tasks.filter((t) => {
+    const filtered = tasks.filter((t) => {
       const matchSearch =
         t.title.toLowerCase().includes(search.toLowerCase()) ||
         (t.notes && t.notes.toLowerCase().includes(search.toLowerCase()));
       const matchStatus = statusFilter === 'all' || t.status === statusFilter;
       return matchSearch && matchStatus;
     });
+    return sortTasksDescending(filtered);
   }, [tasks, search, statusFilter]);
 
   // Hitung jumlah task per status untuk badge filter
@@ -54,15 +73,15 @@ export default function DashboardPage() {
     return counts;
   }, [tasks]);
 
-  // Kelompokkan filtered tasks berdasarkan tanggal pengingat
+  // Potong task sesuai limit pagination
+  const displayedTasks = useMemo(() => {
+    return paginateTasks(filteredTasks, visibleCount);
+  }, [filteredTasks, visibleCount]);
+
+  // Kelompokkan displayed tasks berdasarkan tanggal pengingat (descending)
   const grouped = useMemo(() => {
-    return filteredTasks.reduce<Record<string, Task[]>>((acc, task) => {
-      const day = format(new Date(task.reminder_date), 'yyyy-MM-dd');
-      if (!acc[day]) acc[day] = [];
-      acc[day].push(task);
-      return acc;
-    }, {});
-  }, [filteredTasks]);
+    return groupTasksByDate(displayedTasks);
+  }, [displayedTasks]);
 
   return (
     <div className="min-h-screen bg-gray-50/50 dark:bg-slate-900 transition-colors">
@@ -79,9 +98,9 @@ export default function DashboardPage() {
 
             <TaskFilter
               search={search}
-              onSearchChange={setSearch}
+              onSearchChange={handleSearchChange}
               statusFilter={statusFilter}
-              onStatusFilterChange={setStatusFilter}
+              onStatusFilterChange={handleStatusFilterChange}
               counts={filterCounts}
             />
 
@@ -90,16 +109,30 @@ export default function DashboardPage() {
                 Tidak ada pengingat yang cocok dengan pencarian / filter.
               </div>
             ) : (
-              Object.entries(grouped).map(([date, dayTasks]) => (
-                <TaskGroup
-                  key={date}
-                  date={date}
-                  tasks={dayTasks}
-                  onEdit={setEditTarget}
-                  onStatusChange={updateStatus}
-                  onDelete={setDeleteTarget}
-                />
-              ))
+              <>
+                {Object.entries(grouped).map(([date, dayTasks]) => (
+                  <TaskGroup
+                    key={date}
+                    date={date}
+                    tasks={dayTasks}
+                    onEdit={setEditTarget}
+                    onStatusChange={updateStatus}
+                    onDelete={setDeleteTarget}
+                  />
+                ))}
+
+                {visibleCount < filteredTasks.length && (
+                  <div className="mt-2 mb-4 flex justify-center">
+                    <button
+                      onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+                      className="w-full py-3 px-4 rounded-2xl text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50/70 hover:bg-indigo-100/80 dark:bg-indigo-950/50 dark:hover:bg-indigo-900/60 border border-indigo-100 dark:border-indigo-900/60 transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.99]"
+                    >
+                      <span>Load More...</span>
+                      <ChevronDown size={14} />
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
