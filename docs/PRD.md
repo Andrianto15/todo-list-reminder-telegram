@@ -2,13 +2,14 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.0
-* **Date:** Juni 2026
+* **Version:** 3.1
+* **Date:** 16 Agustus 2026
 * **Author:** Project Owner
 * **Changelog:**
   * v1.0 — Draft awal
   * v2.0 — Tambah auth, soft delete, persistent reminder, pisah tabel `telegram_connections`
   * v3.0 — Tambah detail API routes, struktur folder, flow koneksi Telegram, catatan teknis deployment
+  * v3.1 — Update branding maskot aplikasi (Favicon browser, PWA home screen icons 192x192 & 512x512, dan Navbar logo)
 
 ---
 
@@ -53,9 +54,10 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-0.2:** Setiap user hanya dapat mengakses data miliknya sendiri (multi-user isolation via RLS).
 * **FR-0.3:** Penghapusan akun menggunakan **soft delete**: set `is_active = false` dan `deactivated_at`, data tidak dihapus permanen.
 
-### 4.2 PWA Core Capability
+### 4.2 PWA Core Capability & Branding
 * **FR-1.1:** Aplikasi dapat diinstal di Android, iOS, dan Desktop (Add to Home Screen).
 * **FR-1.2:** Aplikasi memiliki Web App Manifest dan mendukung pemuatan instan via Service Workers.
+* **FR-1.3 App Branding & Assets:** Aplikasi menggunakan aset logo maskot jam alarm resmi yang seragam pada Favicon browser (`src/app/favicon.ico`), PWA Home Screen icons (`public/icons/icon-192x192.png`, `public/icons/icon-512x512.png`), dan Navbar header (`public/icons/logo.png`).
 
 ### 4.3 Task Management (CRUD)
 * **FR-2.1 Input Task:** User dapat memasukkan judul tugas, tanggal & waktu reminder, dan catatan tambahan (opsional).

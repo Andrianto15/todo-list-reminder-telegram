@@ -3,7 +3,8 @@
 import { createClient } from '@/lib/supabase/client';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { CheckSquare, Send, LogOut, Sun, Moon } from 'lucide-react';
+import { Send, LogOut, Sun, Moon } from 'lucide-react';
+import Image from 'next/image';
 import { toast } from 'sonner';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -24,9 +25,16 @@ export default function Navbar() {
     <nav className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 sticky top-0 z-30 transition-colors">
       <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2.5 group">
-          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white font-bold flex items-center justify-center shadow-sm shadow-indigo-200 dark:shadow-none group-hover:scale-105 transition-transform">
-            <CheckSquare size={18} />
-          </span>
+          <div className="w-8 h-8 rounded-xl overflow-hidden shadow-sm shadow-indigo-200 dark:shadow-none group-hover:scale-105 transition-transform flex items-center justify-center bg-indigo-50 dark:bg-slate-800 border border-indigo-100/50 dark:border-slate-700/50">
+            <Image
+              src="/icons/logo.png"
+              alt="Todo Reminder Logo"
+              width={32}
+              height={32}
+              className="w-full h-full object-cover"
+              priority
+            />
+          </div>
           <span className="font-semibold text-sm text-gray-900 dark:text-slate-100 tracking-tight">
             Todo Reminder
           </span>
