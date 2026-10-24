@@ -1,7 +1,27 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
+
+export function verifyTelegramWebhookSecret(request: Request): boolean {
+  const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (!secret) return false;
+
+  const headerSecret = request.headers.get('x-telegram-bot-api-secret-token');
+  if (!headerSecret) return false;
+
+  const expectedBuffer = Buffer.from(secret);
+  const actualBuffer = Buffer.from(headerSecret);
+  if (expectedBuffer.length !== actualBuffer.length) {
+    return false;
+  }
+  return crypto.timingSafeEqual(expectedBuffer, actualBuffer);
+}
 
 export async function POST(request: Request) {
+  if (!verifyTelegramWebhookSecret(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -14,13 +34,12 @@ export async function POST(request: Request) {
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-  // Validasi secret token dari Telegram
-  const secretToken = request.headers.get('x-telegram-bot-api-secret-token');
-  if (secretToken !== process.env.TELEGRAM_WEBHOOK_SECRET) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  let body: any;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
   }
-
-  const body = await request.json();
 
   // Handle perintah /start <connect_token>
   if (body.message?.text?.startsWith('/start ')) {
