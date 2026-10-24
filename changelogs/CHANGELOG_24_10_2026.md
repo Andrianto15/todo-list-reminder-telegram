@@ -203,6 +203,24 @@ Pembaruan versi minor & patch yang stabil dan backward-compatible:
 - Memperbarui `tests/reminder.test.ts` (+2 tests).
 - Total pengujian: **14 test suites, 68 tests lulus 100%**.
 
+---
 
+## Ringkasan Perubahan: Pemutakhiran Dokumentasi Proyek (README.md) (24-10-2026)
 
+### 1. Visual Header & Branding
+- Menambahkan logo resmi proyek (`public/icons/logo.png`) terpusat di header.
+- Menambahkan badges status teknologi terkini: Next.js 16.4.3, React 19.3.1, TypeScript 5.9.3, Tailwind CSS v4.3.3, Supabase SSR, grammY 1.46.0, PWA Ready, dan status Jest 69 passed.
 
+### 2. Standardisasi Format & Kepatuhan Skill `create-readme`
+- Menerapkan GitHub Admonitions GFM (`> [!NOTE]`, `> [!IMPORTANT]`, `> [!TIP]`) menggantikan blockquote biasa.
+- Menghapus seksi `LICENSE` dan `Pengembang` yang redundan (merujuk ke file `LICENSE` resmi di root).
+- Menghindari penggunaan emoji berlebih dan menjaga tone dokumentasi tetap profesional, ringkas, dan to-the-point.
+
+### 3. Pemutakhiran Fitur, Arsitektur & Keamanan
+- Mendokumentasikan fitur keamanan baru: HTTP Security Headers, payload allowlisting/mass assignment guard pada PATCH `/api/tasks/[id]`, verifikasi timing-safe token pada webhook Telegram, dan HTML entity escaping pada pengiriman pesan notifikasi.
+- Mendokumentasikan arsitektur alur kerja integrasi scheduler Upstash QStash dengan diagram visual ASCII.
+- Menambahkan panduan variabel lingkungan `CRON_SECRET` pada `.env.local` dan instruksi konfigurasi cron Upstash QStash dengan header `Authorization: Bearer <CRON_SECRET>`.
+
+### 4. Sinkronisasi Struktur Direktori & Dependensi
+- Memperbarui tabel teknologi dan diagram pohon direktori sesuai kondisi riil repositori.
+- Memperbarui dokumentasi status testing ke 14 test suites (69 automated unit tests lulus 100%).

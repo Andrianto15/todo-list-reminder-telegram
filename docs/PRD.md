@@ -2,7 +2,7 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.9
+* **Version:** 3.10
 * **Date:** 24 Oktober 2026
 * **Author:** Project Owner
 * **Changelog:**
@@ -18,6 +18,7 @@
   * v3.7: Audit teknis Impeccable & Quality Polish: Aksesibilitas WCAG 2.1 AA (form control IDs & labels, modal focus trap & escape restoration, ARIA progressbar/tablist/checkbox), kontras warna status badge ≥ 4.5:1, transisi reduced-motion 80ms, migrasi next/font/google, themed selection & caret color Steel Blue, dan eliminasi residual token manual pada seluruh utility surfaces.
   * v3.8: Perbaikan layout text input "Cari Tugas" (TaskFilter): isolasi styling dasar form controls ke @layer base di globals.css dan penegasan padding eksplisit (!pl-10 !pr-10) serta pointer-events-none pada icon Search untuk mencegah tumpang tindih visual dan memastikan interaksi tap/click responsif di mobile.
   * v3.9: Remediasi Keamanan (Security Audit): Proteksi otentikasi secret token pada /api/remind (CRON_SECRET via Bearer/x-cron-secret), HTML entity escaping pada pesan Telegram untuk mencegah HTML injection & parsing DoS, sanitasi payload & pencegahan mass assignment pada PATCH /api/tasks/[id], penguatan verifikasi timing-safe secret pada webhook Telegram, konfigurasi HTTP security headers di next.config.ts, dan klarifikasi RLS policy telegram_connections.
+  * v3.10: Pemutakhiran Dokumentasi Proyek (README.md) menyeluruh sesuai standar skill create-readme: penambahan visual header logo maskot resmi, penyelarasan dependency mutakhir, penambahan dokumentasi keamanan & arsitektur Upstash cron scheduler, implementasi GitHub admonitions GFM, dan pembersihan seksi lisensi redundan.
 
 ---
 
