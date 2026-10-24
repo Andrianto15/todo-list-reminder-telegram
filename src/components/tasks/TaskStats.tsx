@@ -58,7 +58,14 @@ export default function TaskStats({ tasks }: Props) {
       </div>
 
       {/* Progress Bar (Sky Glow accent from DESIGN.md) */}
-      <div className="w-full bg-black/20 rounded-full h-2 overflow-hidden">
+      <div
+        role="progressbar"
+        aria-valuenow={percentage}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Progres Tugas Harian"
+        className="w-full bg-black/20 rounded-full h-2 overflow-hidden"
+      >
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}

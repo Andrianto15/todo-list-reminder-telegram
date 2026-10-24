@@ -44,8 +44,9 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Email</label>
+            <label htmlFor="login-email" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Email</label>
             <input
+              id="login-email"
               type="email"
               required
               placeholder="nama@email.com"
@@ -56,8 +57,9 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Kata Sandi</label>
+            <label htmlFor="login-password" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Kata Sandi</label>
             <input
+              id="login-password"
               type="password"
               required
               placeholder="••••••••"

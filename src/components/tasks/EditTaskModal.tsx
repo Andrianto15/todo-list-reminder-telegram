@@ -48,8 +48,9 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
     <Modal open={true} onClose={onClose} title="Edit Task">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Judul Task *</label>
+          <label htmlFor="edit-task-title" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Judul Task *</label>
           <input
+            id="edit-task-title"
             type="text"
             required
             value={title}
@@ -59,8 +60,9 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Status</label>
+          <label htmlFor="edit-task-status" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Status</label>
           <select
+            id="edit-task-status"
             value={status}
             onChange={(e) => setStatus(e.target.value as TaskStatus)}
             className="w-full border border-[#cbd5e1] dark:border-[#1e293b] rounded-lg px-3.5 py-2.5 text-sm text-[#0f172a] dark:text-[#f8fafc] outline-none focus:ring-2 focus:ring-[#4682b4] focus:border-[#4682b4] bg-white dark:bg-[#0f172a] min-h-[44px]"
@@ -73,8 +75,9 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Tanggal & Waktu Pengingat *</label>
+          <label htmlFor="edit-task-reminder" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Tanggal & Waktu Pengingat *</label>
           <input
+            id="edit-task-reminder"
             type="datetime-local"
             required
             value={reminderDate}
@@ -84,8 +87,9 @@ export default function EditTaskModal({ task, onClose, onSave }: Props) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Catatan</label>
+          <label htmlFor="edit-task-notes" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Catatan</label>
           <textarea
+            id="edit-task-notes"
             placeholder="Tambah catatan detail..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}

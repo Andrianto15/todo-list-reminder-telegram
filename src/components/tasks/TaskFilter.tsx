@@ -39,6 +39,7 @@ export default function TaskFilter({
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Cari tugas..."
+          aria-label="Cari tugas"
           className="w-full bg-white dark:bg-[#0f172a] border border-[#cbd5e1] dark:border-[#1e293b] rounded-lg pl-10 pr-10 py-2.5 text-sm text-[#0f172a] dark:text-[#f8fafc] placeholder:text-[#64748b] dark:placeholder:text-[#94a3b8] outline-none focus:ring-2 focus:ring-[#4682b4] focus:border-[#4682b4] transition shadow-xs min-h-[44px]"
         />
         {search && (
@@ -53,18 +54,20 @@ export default function TaskFilter({
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+      <div role="tablist" aria-label="Filter status tugas" className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
         {filters.map((f) => {
           const isActive = statusFilter === f.id;
           const count = counts[f.id] || 0;
           return (
             <button
               key={f.id}
+              role="tab"
+              aria-selected={isActive}
               onClick={() => onStatusFilterChange(f.id)}
-              className={`px-3.5 py-2 min-h-[40px] rounded-full font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 min-h-[44px] rounded-full font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                 isActive
                   ? 'bg-[#4682b4] text-white shadow-xs'
-                  : 'bg-white dark:bg-[#0f172a] text-[#64748b] dark:text-[#94a3b8] border border-[#e2e8f0] dark:border-[#1e293b] hover:bg-[#e2e8f0]/50 dark:hover:bg-[#1e293b]'
+                  : 'bg-white dark:bg-[#0f172a] text-[#475569] dark:text-[#94a3b8] border border-[#e2e8f0] dark:border-[#1e293b] hover:bg-[#e2e8f0]/50 dark:hover:bg-[#1e293b]'
               }`}
             >
               <span>{f.label}</span>
@@ -72,7 +75,7 @@ export default function TaskFilter({
                 className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
                   isActive
                     ? 'bg-white/20 text-white'
-                    : 'bg-[#f1f5f9] dark:bg-[#1e293b] text-[#64748b] dark:text-[#94a3b8]'
+                    : 'bg-[#f1f5f9] dark:bg-[#1e293b] text-[#334155] dark:text-[#94a3b8]'
                 }`}
               >
                 {count}

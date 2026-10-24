@@ -70,8 +70,9 @@ export default function RegisterPage() {
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Nama Lengkap</label>
+            <label htmlFor="reg-fullname" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Nama Lengkap</label>
             <input
+              id="reg-fullname"
               type="text"
               required
               placeholder="Nama Anda"
@@ -82,8 +83,9 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Email</label>
+            <label htmlFor="reg-email" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Email</label>
             <input
+              id="reg-email"
               type="email"
               required
               placeholder="nama@email.com"
@@ -94,8 +96,9 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Kata Sandi</label>
+            <label htmlFor="reg-password" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Kata Sandi</label>
             <input
+              id="reg-password"
               type="password"
               required
               placeholder="Minimal 6 karakter"

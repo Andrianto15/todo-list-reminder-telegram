@@ -1,6 +1,20 @@
 import type { Metadata } from "next";
+import { Public_Sans, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+
+// Fonts: Public Sans, JetBrains Mono
+const publicSans = Public_Sans({
+  subsets: ["latin"],
+  variable: "--font-public-sans",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Todo Reminder - Pengingat Tugas via Telegram",
@@ -13,17 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className="h-full antialiased font-['Public_Sans',system-ui,sans-serif]">
-      <head>
-        {/* Fonts: Public Sans, JetBrains Mono */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="min-h-full flex flex-col font-sans bg-[#f8fafc] dark:bg-[#090d16] text-[#0f172a] dark:text-[#f8fafc]">
+    <html lang="id" className={`h-full antialiased ${publicSans.variable} ${jetbrainsMono.variable}`}>
+      <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
         {children}
         <Toaster richColors position="top-center" closeButton />
       </body>

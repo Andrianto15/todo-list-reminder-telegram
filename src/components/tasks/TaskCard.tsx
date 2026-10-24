@@ -21,6 +21,8 @@ export default function TaskCard({ task, onEdit, onStatusChange, onDelete }: Pro
       <div className="flex items-start gap-2.5">
         {/* Checkbox done with 44px hit bounds */}
         <button
+          role="checkbox"
+          aria-checked={isDone}
           onClick={() => onStatusChange(task.id, isDone ? 'to_do' : 'done')}
           aria-label={isDone ? 'Tandai belum selesai' : 'Tandai selesai'}
           className="min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0 -m-2"
@@ -49,7 +51,7 @@ export default function TaskCard({ task, onEdit, onStatusChange, onDelete }: Pro
               {format(new Date(task.reminder_date), 'HH:mm', { locale: id })}
             </span>
             {task.reminder_count > 0 && (
-              <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-full font-semibold text-[10px]">
+              <span className="inline-flex items-center gap-1 text-amber-800 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-full font-semibold text-[10px]">
                 <Bell size={10} />
                 <span>Pengingat #{task.reminder_count}</span>
               </span>

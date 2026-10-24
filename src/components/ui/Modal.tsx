@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -12,14 +12,64 @@ interface ModalProps {
 }
 
 export default function Modal({ open, onClose, title, children }: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && open) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    if (open) {
+      previousActiveElement.current = document.activeElement as HTMLElement;
+
+      const timer = setTimeout(() => {
+        if (modalRef.current) {
+          const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (focusable.length > 0) {
+            focusable[0].focus();
+          }
+        }
+      }, 50);
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onClose();
+          return;
+        }
+
+        if (e.key === 'Tab' && modalRef.current) {
+          const focusable = Array.from(
+            modalRef.current.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            )
+          );
+
+          if (focusable.length === 0) {
+            e.preventDefault();
+            return;
+          }
+
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+
+          if (e.shiftKey && document.activeElement === first) {
+            last.focus();
+            e.preventDefault();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            first.focus();
+            e.preventDefault();
+          }
+        }
+      };
+
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('keydown', handleKeyDown);
+        if (previousActiveElement.current) {
+          previousActiveElement.current.focus();
+        }
+      };
+    }
   }, [open, onClose]);
 
   return (
@@ -37,6 +87,7 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
 
           {/* Modal Container */}
           <motion.div
+            ref={modalRef}
             initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}

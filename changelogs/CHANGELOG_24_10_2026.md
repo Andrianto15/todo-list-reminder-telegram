@@ -85,3 +85,44 @@ Pembaruan versi minor & patch yang stabil dan backward-compatible:
 
 ### 6. Dokumentasi
 - Update `docs/PRD.md` ke versi 3.6 (FR-1.4 dan Changelog).
+
+---
+
+## Ringkasan Perubahan: Impeccable Audit Technical Remediation
+
+### 1. Aksesibilitas Form & Dialog (WCAG 2.1 AA)
+- Menambahkan atribut `id` dan `htmlFor` pada seluruh kontrol form: `AddTaskModal.tsx`, `EditTaskModal.tsx`, `src/app/(auth)/login/page.tsx`, dan `src/app/(auth)/register/page.tsx`.
+- Menambahkan accessible label `aria-label="Cari tugas"` pada input pencarian `TaskFilter.tsx`.
+- Menerapkan keyboard focus trap loop (Tab / Shift+Tab) dan auto-focus restoration pada `Modal.tsx` saat dialog dibuka dan ditutup.
+- Menambahkan semantik ARIA:
+  - `role="progressbar"`, `aria-valuenow`, `aria-valuemin={0}`, `aria-valuemax={100}` pada `TaskStats.tsx`.
+  - `role="tablist"` dan `role="tab"` dengan `aria-selected` pada filter tabs `TaskFilter.tsx`.
+  - `role="checkbox"` dan `aria-checked` pada tombol toggle status task di `TaskCard.tsx`.
+  - Standardisasi label tombol tema menjadi `aria-label="Ubah Tema"` di `Navbar.tsx`.
+
+### 2. Motion Sensitivity & Kontras Warna
+- Mengganti aturan global `0.01ms !important` kill di `globals.css` dengan durasi intentional `0.08s` pada `@media (prefers-reduced-motion: reduce)` guna mempertahankan feedback visual saat pergantian status.
+- Memperbaiki rasio kontras teks status badge agar melampaui ambang batas WCAG AA (≥ 4.5:1):
+  - Badge `to_do` menggunakan teks `#2b5373` pada background `#eef5fa` (~7.5:1).
+  - Badge `hold` menggunakan teks `text-amber-800` pada background `bg-amber-50` (~6.2:1).
+  - Badge reminder count di `TaskCard.tsx` diperbarui ke `text-amber-800`.
+  - Inactive pill count badge di `TaskFilter.tsx` diperbarui ke `text-[#334155]`.
+
+### 3. Theming & Token Semantik
+- Mengganti kelas warna hex manual pada canvas root dan navbar (`layout.tsx`, `dashboard/page.tsx`, `Navbar.tsx`) dengan token semantik Tailwind v4 (`bg-background`, `bg-surface`, `text-foreground`, `border-border`).
+
+### 4. Performa, Tipografi, & Responsiveness
+- Migrasi external `<link>` Google Fonts di `layout.tsx` ke native `next/font/google` (`Public_Sans`, `JetBrains_Mono`) dengan variabel CSS `--font-public-sans` dan `--font-jetbrains-mono` (mengeliminasi render-blocking network requests dan warning `@next/next/no-page-custom-font`).
+- Memperbaiki warning cascading render (`react-hooks/set-state-in-effect`) pada `useTheme.ts`, `useTasks.ts`, dan `useTelegram.ts`.
+- Meningkatkan touch target filter pills di `TaskFilter.tsx` dari `min-h-[40px]` menjadi `min-h-[44px]`.
+
+### 5. Verifikasi & Testing
+- Menambahkan 3 test suite baru:
+  - `tests/auditAccessibility.test.ts` (8 tests)
+  - `tests/auditContrast.test.ts` (3 tests)
+  - `tests/auditPerformance.test.ts` (2 tests)
+- Seluruh 8 test suites lulus: **46/46 tests passed (100%)**.
+- Pemeriksaan linter ESLint: **0 errors, 0 warnings**.
+- Mechanical detector Impeccable: **0 violations (`[]`)**.
+- Next.js production build (`npm run build`): **berhasil (exit code 0)**.
+

@@ -33,8 +33,34 @@ export function useTelegram() {
   }, [supabase]);
 
   useEffect(() => {
-    fetchConnection();
-  }, [fetchConnection]);
+    let ignore = false;
+    const load = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          if (!ignore) setLoading(false);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('telegram_connections')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error) throw error;
+        if (!ignore) setConn(data);
+      } catch (err) {
+        console.error('Failed to fetch Telegram connection:', err);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    };
+    void load();
+    return () => {
+      ignore = true;
+    };
+  }, [supabase]);
 
   const generateToken = async () => {
     setGenerating(true);

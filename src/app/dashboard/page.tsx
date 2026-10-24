@@ -80,7 +80,7 @@ export default function DashboardPage() {
   }, [displayedTasks]);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090d16] transition-colors">
+    <div className="min-h-screen bg-background transition-colors">
       <Navbar />
       <div className="max-w-lg mx-auto px-4 py-6 pb-24">
         {loading ? (

@@ -35,8 +35,9 @@ export default function AddTaskModal({ open, onClose, onAdd }: Props) {
     <Modal open={open} onClose={onClose} title="Tambah Task Baru">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Judul Task *</label>
+          <label htmlFor="add-task-title" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Judul Task *</label>
           <input
+            id="add-task-title"
             type="text"
             required
             placeholder="Contoh: Bayar Listrik..."
@@ -47,8 +48,9 @@ export default function AddTaskModal({ open, onClose, onAdd }: Props) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Tanggal & Waktu Pengingat *</label>
+          <label htmlFor="add-task-reminder" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Tanggal & Waktu Pengingat *</label>
           <input
+            id="add-task-reminder"
             type="datetime-local"
             required
             value={reminderDate}
@@ -58,8 +60,9 @@ export default function AddTaskModal({ open, onClose, onAdd }: Props) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Catatan (opsional)</label>
+          <label htmlFor="add-task-notes" className="block text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] mb-1.5">Catatan (opsional)</label>
           <textarea
+            id="add-task-notes"
             placeholder="Tambah catatan detail..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}

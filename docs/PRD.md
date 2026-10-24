@@ -262,3 +262,22 @@ WHERE tasks.status = 'to_do'
 - `implementation.md` — panduan implementasi detail + boilerplate kode fase 1–5
 - `checklist.md` — tracking progress per item (80 item total)
 
+---
+
+## 8. Standar Kualitas, Aksesibilitas (WCAG AA), dan Optimasi UI
+
+Implementasi mengikuti standar teknis berikut:
+1. **Aksesibilitas Form & Kontrol (WCAG 2.1 AA)**:
+   - Seluruh elemen input, textarea, dan select memiliki atribut `id` unik yang terhubung dengan `<label htmlFor="...">`.
+   - Dialog modal dilengkapi focus trap loop (Tab / Shift+Tab) dan auto-focus restoration ke pemicu modal saat ditutup.
+   - Indikator progres tugas (`TaskStats`) memiliki atribut `role="progressbar"`, `aria-valuenow`, `aria-valuemin={0}`, dan `aria-valuemax={100}`.
+   - Filter tab memiliki atribut `role="tablist"`, `role="tab"`, dan `aria-selected`.
+   - Tombol toggle checklist status tugas memiliki `role="checkbox"` dan `aria-checked`.
+2. **Kontras Warna & Tipografi**:
+   - Status badge memenuhi rasio kontras teks minimum 4.5:1 (`to_do` teks `#2b5373`, `hold` teks `amber-800`, `done` teks `emerald-700`).
+   - Font dimigrasikan ke `next/font/google` (`Public_Sans`, `JetBrains_Mono`) untuk zero layout shift (CLS) dan self-hosting otomatis.
+3. **Sentuhan Mobile & Motion Sensitivity**:
+   - Seluruh interactive pills / tap target memiliki tinggi minimum 44px (`min-h-[44px]`).
+   - Aturan `@media (prefers-reduced-motion: reduce)` menggunakan transisi cepat 80ms untuk mempertahankan feedback visual tanpa efek gerak agresif.
+
+

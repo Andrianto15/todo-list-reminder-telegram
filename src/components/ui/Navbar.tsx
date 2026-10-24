@@ -22,7 +22,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white dark:bg-[#0f172a] border-b border-[#e2e8f0] dark:border-[#1e293b] sticky top-0 z-30 transition-colors">
+    <nav className="bg-surface border-b border-border sticky top-0 z-30 transition-colors">
       <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2.5 group min-h-[44px]">
           <div className="w-8 h-8 rounded-lg overflow-hidden shadow-xs group-hover:opacity-90 transition-opacity flex items-center justify-center bg-[#eef5fa] dark:bg-[#18283d] border border-[#e2e8f0] dark:border-[#1e293b]">
@@ -57,7 +57,7 @@ export default function Navbar() {
             onClick={toggleTheme}
             className="text-[#64748b] dark:text-[#94a3b8] hover:text-[#4682b4] dark:hover:text-[#6ba3ce] transition p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-[#e2e8f0]/50 dark:hover:bg-[#1e293b]"
             title={theme === 'light' ? 'Mode Gelap' : 'Mode Terang'}
-            aria-label="Toggle Theme"
+            aria-label="Ubah Tema"
           >
             {theme === 'light' ? <Moon size={16} /> : <Sun size={16} className="text-amber-400" />}
           </button>
