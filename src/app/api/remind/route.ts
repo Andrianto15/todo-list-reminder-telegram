@@ -1,12 +1,41 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 import {
   formatReminderMessage,
   getReminderInlineKeyboard,
   getNextRemindAt,
 } from '@/lib/telegram/reminder';
 
-export async function POST() {
+export function verifyCronSecret(request: Request): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+
+  const authHeader = request.headers.get('authorization');
+  const cronSecretHeader = request.headers.get('x-cron-secret');
+
+  let token = '';
+  if (authHeader?.startsWith('Bearer ')) {
+    token = authHeader.slice(7).trim();
+  } else if (cronSecretHeader) {
+    token = cronSecretHeader.trim();
+  }
+
+  if (!token) return false;
+
+  const expectedBuffer = Buffer.from(secret);
+  const actualBuffer = Buffer.from(token);
+  if (expectedBuffer.length !== actualBuffer.length) {
+    return false;
+  }
+  return crypto.timingSafeEqual(expectedBuffer, actualBuffer);
+}
+
+export async function POST(request: Request) {
+  if (!verifyCronSecret(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -117,7 +146,6 @@ export async function POST() {
   return NextResponse.json({ sent });
 }
 
-// Support GET method jika dipanggil langsung dari browser/ping service
-export async function GET() {
-  return POST();
+export async function GET(request: Request) {
+  return POST(request);
 }
