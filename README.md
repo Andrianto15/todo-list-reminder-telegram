@@ -221,3 +221,10 @@ Untuk memicu pemeriksaan pengingat berkala secara serverless di produksi:
 | `npm run start` | Menjalankan server hasil build produksi |
 | `npm run lint` | Memeriksa kepatuhan linter ESLint |
 | `npm test` | Menjalankan seluruh test suite otomatis (Jest) |
+
+---
+
+## Lisensi
+
+Didistribusikan di bawah lisensi MIT. Lihat [`LICENSE`](LICENSE) untuk informasi hak cipta dan ketentuan hukum lengkap.
+
