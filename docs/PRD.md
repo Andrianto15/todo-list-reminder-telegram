@@ -2,18 +2,19 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.5
+* **Version:** 3.6
 * **Date:** 24 Oktober 2026
 * **Author:** Project Owner
 * **Changelog:**
-  * v1.0 — Draft awal
-  * v2.0 — Tambah auth, soft delete, persistent reminder, pisah tabel `telegram_connections`
-  * v3.0 — Tambah detail API routes, struktur folder, flow koneksi Telegram, catatan teknis deployment
-  * v3.1 — Update branding maskot aplikasi (Favicon browser, PWA home screen icons 192x192 & 512x512, dan Navbar logo)
-  * v3.2 — Format waktu reminder Telegram UTC+7 (WIB) & penambahan inline keyboard Done, Hold, Cancel
-  * v3.3 — Implementasi Design Tokens (`docs/DESIGN.md`): Primary `#0051c3`, font stack `-apple-system`, body `13px`/400, heading 300, surface/border `#ebebeb`, text `#404040`, radius `5px`, motion `150ms ease`.
-  * v3.4 — Update format tanggal Top 3 Highlight menyertakan tahun (`Minggu, 16 Agt 2026 · 21:30`) dan standardisasi header Task History ke format bahasa Indonesia dengan tahun (`MINGGU, 16 AGT 2026`).
-  * v3.5 — Pembaruan minor & patch dependency packages (Next.js 16.4.3, React 19.3.1, Supabase SSR 0.12.7 & JS 2.118.0, grammY 1.46.0, TypeScript 5.9.3, Jest 30.5.2) serta penyesuaian ESLint Flat Config (`public/**` ignore & hook rules).
+  * v1.0: Draft awal
+  * v2.0: Tambah auth, soft delete, persistent reminder, pisah tabel telegram_connections
+  * v3.0: Tambah detail API routes, struktur folder, flow koneksi Telegram, catatan teknis deployment
+  * v3.1: Update branding maskot aplikasi (Favicon browser, PWA home screen icons 192x192 & 512x512, dan Navbar logo)
+  * v3.2: Format waktu reminder Telegram UTC+7 (WIB) & penambahan inline keyboard Done, Hold, Cancel
+  * v3.3: Implementasi Design Tokens awal (Cobalt #0051c3, -apple-system, 13px)
+  * v3.4: Update format tanggal Top 3 Highlight menyertakan tahun (Minggu, 16 Agt 2026 · 21:30) dan standardisasi header Task History ke format bahasa Indonesia dengan tahun (MINGGU, 16 AGT 2026)
+  * v3.5: Pembaruan minor & patch dependency packages (Next.js 16.4.3, React 19.3.1, Supabase SSR 0.12.7 & JS 2.118.0, grammY 1.46.0, TypeScript 5.9.3, Jest 30.5.2) serta penyesuaian ESLint Flat Config (public/** ignore & hook rules)
+  * v3.6: Pembaruan Design System menyeluruh berdasarkan docs/DESIGN.md: Primary Steel Blue #4682b4 (hover: #36648b), Accent Sky Glow #0ea5e9, Canvas Background #f8fafc (dark: #090d16), Card Surface #ffffff (dark: #0f172a), Border #e2e8f0 (dark: #1e293b), Text Main #0f172a (dark: #f8fafc), Text Muted #64748b (dark: #94a3b8), tipografi Public Sans dan JetBrains Mono, type scale body 0.875rem (14px), radius tokens (sm: 0.375rem, md: 0.5rem, lg: 0.75rem, xl: 1rem, full: 9999px), elevasi shadow vocabulary (card rest, card hover, modal float), dan mobile-first min 44px tap targets
 
 ---
 
@@ -44,7 +45,7 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 | **Frontend** | Next.js 14+ (App Router, TypeScript) + Tailwind CSS |
 | **PWA Engine** | `@ducanh2912/next-pwa` + Web App Manifest |
 | **Backend & Database** | Supabase (PostgreSQL) + Supabase Edge Functions (Deno/TypeScript) |
-| **Auth** | Supabase Auth — Email/Password + Google OAuth |
+| **Auth** | Supabase Auth: Email/Password + Google OAuth |
 | **Bot Integration** | Telegram Bot API via `grammY` |
 | **Cron Job** | Upstash Workflow (interval 1–5 menit) |
 | **Hosting** | Vercel (Frontend & API) + Supabase Cloud |
@@ -63,11 +64,10 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-1.2:** Aplikasi memiliki Web App Manifest dan mendukung pemuatan instan via Service Workers.
 * **FR-1.3 App Branding & Assets:** Aplikasi menggunakan aset logo maskot jam alarm resmi yang seragam pada Favicon browser (`src/app/favicon.ico`), PWA Home Screen icons (`public/icons/icon-192x192.png`, `public/icons/icon-512x512.png`), dan Navbar header (`public/icons/logo.png`).
 * **FR-1.4 Design System & Token Integration:** Aplikasi menerapkan sistem token desain resmi (`docs/DESIGN.md`):
-  * **Colors:** Primary `#0051c3` (Cobalt/Royal Blue), Foreground text `#404040`, Surface `#ebebeb`, Border `#ebebeb`, Background `#ffffff`, Text Muted `#737373`.
-  * **Typography:** Font stack `-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Helvetica Neue, Arial, sans-serif`. Body `13px` (regular 400, line-height 1.5), Headings font-weight `300` (line-height 1.3).
-  * **Spacing:** Base unit `3px` (scale: 3, 15, 30, 60).
-  * **Corner Radius:** `5px` (`rounded-[5px]`).
-  * **Motion & Transition:** Durasi `150ms`, easing `ease`.
+  * **Colors:** Primary `#4682b4` (Steel Blue / hover: `#36648b`), Accent `#0ea5e9` (Sky Glow), Foreground text `#0f172a` (dark: `#f8fafc`), Card Surface `#ffffff` (dark: `#0f172a`), Border `#e2e8f0` (dark: `#1e293b`), Background `#f8fafc` (dark: `#090d16`), Text Muted `#64748b` (dark: `#94a3b8`).
+  * **Typography:** Font stack `Public Sans` (fallback: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif) dan `JetBrains Mono` untuk kode / monospaced. Body `0.875rem` (14px, regular 400, line-height 1.5).
+  * **Shapes & Radius:** xs (`4px`), sm (`0.375rem`), md (`0.5rem`), lg (`0.75rem`), xl (`1rem`), full (`9999px`).
+  * **Elevation & Motion:** Hairline borders grounded, interactive shadow vocabulary (card rest, card hover, modal float), durasi 150ms ease, mobile-first min 44px touch targets.
 
 ### 4.3 Task Management (CRUD)
 * **FR-2.1 Input Task:** User dapat memasukkan judul tugas, tanggal & waktu reminder, dan catatan tambahan (opsional).

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -12,6 +12,16 @@ interface ModalProps {
 }
 
 export default function Modal({ open, onClose, title, children }: ModalProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && open) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open, onClose]);
+
   return (
     <AnimatePresence>
       {open && (
@@ -22,7 +32,7 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs"
           />
 
           {/* Modal Container */}
@@ -31,13 +41,18 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="relative bg-white dark:bg-slate-800 rounded-[5px] max-w-md w-full p-6 shadow-lg border border-[#ebebeb] dark:border-slate-700 space-y-4 z-10 text-[#404040] dark:text-slate-100"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+            className="relative bg-white dark:bg-[#0f172a] rounded-xl max-w-md w-full p-6 shadow-2xl border border-[#e2e8f0] dark:border-[#1e293b] space-y-4 z-10 text-[#0f172a] dark:text-[#f8fafc]"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-light text-[#404040] dark:text-slate-100">{title}</h3>
+              <h3 id="modal-title" className="text-lg font-bold text-[#0f172a] dark:text-[#f8fafc]">
+                {title}
+              </h3>
               <button
                 onClick={onClose}
-                className="text-[#737373] dark:text-slate-400 hover:text-[#404040] dark:hover:text-slate-200 rounded-[5px] p-1.5 hover:bg-[#ebebeb]/50 dark:hover:bg-slate-700 transition"
+                className="text-[#64748b] dark:text-[#94a3b8] hover:text-[#0f172a] dark:hover:text-[#f8fafc] rounded-lg p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-[#e2e8f0]/50 dark:hover:bg-[#1e293b] transition"
                 aria-label="Tutup modal"
               >
                 <X size={18} />

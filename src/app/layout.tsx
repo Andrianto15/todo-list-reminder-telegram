@@ -13,12 +13,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className="h-full antialiased">
-      <body className="min-h-full flex flex-col font-sans bg-white dark:bg-slate-900 text-[#404040] dark:text-slate-100">
+    <html lang="id" className="h-full antialiased font-['Public_Sans',system-ui,sans-serif]">
+      <head>
+        {/* Fonts: Public Sans, JetBrains Mono */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-full flex flex-col font-sans bg-[#f8fafc] dark:bg-[#090d16] text-[#0f172a] dark:text-[#f8fafc]">
         {children}
         <Toaster richColors position="top-center" closeButton />
       </body>
     </html>
   );
 }
-
