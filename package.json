@@ -1,7 +1,8 @@
 {
   "name": "todo-list-reminder-telegram",
-  "version": "0.4.5",
+  "version": "0.4.7",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",

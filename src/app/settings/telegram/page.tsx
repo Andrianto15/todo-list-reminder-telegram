@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTelegram } from '@/hooks/useTelegram';
 import Navbar from '@/components/ui/Navbar';
+import Footer from '@/components/ui/Footer';
 import { CheckCircle2, Copy, Check, Loader2, Send, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -18,9 +19,9 @@ export default function TelegramSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background transition-colors">
+    <div className="min-h-screen flex flex-col bg-background transition-colors">
       <Navbar />
-      <div className="max-w-lg mx-auto px-4 py-8">
+      <div className="max-w-lg mx-auto px-4 py-8 flex-1 w-full">
         <div className="flex items-center gap-2 mb-6">
           <Send className="text-primary dark:text-[#6ba3ce]" size={22} />
           <h1 className="text-xl font-bold text-foreground">Integrasi Telegram</h1>
@@ -111,6 +112,7 @@ export default function TelegramSettingsPage() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }
