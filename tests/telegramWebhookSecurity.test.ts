@@ -1,4 +1,4 @@
-import { verifyTelegramWebhookSecret } from '@/app/api/webhook/telegram/route';
+import { verifyTelegramWebhookSecret } from '@/lib/security/telegram';
 
 describe('verifyTelegramWebhookSecret', () => {
   const originalSecret = process.env.TELEGRAM_WEBHOOK_SECRET;

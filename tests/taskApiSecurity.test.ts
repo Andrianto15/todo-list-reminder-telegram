@@ -1,4 +1,4 @@
-import { sanitizeTaskUpdate } from '@/app/api/tasks/[id]/route';
+import { sanitizeTaskUpdate } from '@/lib/security/tasks';
 
 describe('sanitizeTaskUpdate', () => {
   it('allows valid fields: title, notes, status, reminder_date', () => {

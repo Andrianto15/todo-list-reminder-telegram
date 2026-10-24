@@ -224,3 +224,22 @@ Pembaruan versi minor & patch yang stabil dan backward-compatible:
 ### 4. Sinkronisasi Struktur Direktori & Dependensi
 - Memperbarui tabel teknologi dan diagram pohon direktori sesuai kondisi riil repositori.
 - Memperbarui dokumentasi status testing ke 14 test suites (69 automated unit tests lulus 100%).
+
+---
+
+## Ringkasan Perubahan: Perbaikan Type Check & Build Vercel (Next.js Route Exports) (v0.4.5)
+
+### 1. Modularisasi Helper Keamanan API (`src/lib/security/`)
+- Memisahkan fungsi utilitas non-route handler dari file Next.js App Router `route.ts` ke modul terpisah guna mematuhi batasan type checking Next.js App Router (error `TS2344: Type 'OmitWithTag<...>' does not satisfy the constraint '{ [x: string]: never; }'`):
+  - `src/lib/security/cron.ts`: mengekstrak `verifyCronSecret(request: Request)` dari `src/app/api/remind/route.ts`.
+  - `src/lib/security/telegram.ts`: mengekstrak `verifyTelegramWebhookSecret(request: Request)` dari `src/app/api/webhook/telegram/route.ts`.
+  - `src/lib/security/tasks.ts`: mengekstrak `sanitizeTaskUpdate(body: Record<string, unknown>)` dari `src/app/api/tasks/[id]/route.ts`.
+- Memperbarui seluruh pemanggilan di route handlers dan unit test (`tests/apiRemindAuth.test.ts`, `tests/telegramWebhookSecurity.test.ts`, `tests/taskApiSecurity.test.ts`) untuk mengimpor dari `@/lib/security/*`.
+
+### 2. Perbaikan Type Inference Test Header Keamanan (`tests/securityHeaders.test.ts`)
+- Memperbaiki pemanggilan fungsi `nextConfig` pada `tests/securityHeaders.test.ts` (error `TS2349: This expression is not callable. Type 'never' has no call signatures.`) dengan type-casting aman `nextConfig as unknown` sebelum verifikasi `typeof === 'function'`.
+
+### 3. Verifikasi & Build
+- `npx tsc --noEmit`: 0 error (**TypeScript: No errors found**).
+- `npm test`: 14 test suites, 69 tests lulus 100% (**PASS**).
+- `npm run build`: Kompilasi produksi Next.js berhasil sukses (**Exit code 0**).

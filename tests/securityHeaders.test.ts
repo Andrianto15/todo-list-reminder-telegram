@@ -2,8 +2,14 @@ import nextConfig from '../next.config';
 
 describe('HTTP Security Headers Configuration', () => {
   it('defines headers function returning standard security headers for all routes', async () => {
-    // nextConfig might be config object or function
-    const resolvedConfig = typeof nextConfig === 'function' ? await nextConfig('phase-production-build', {}) : nextConfig;
+    const configExport = nextConfig as unknown;
+    const resolvedConfig: any =
+      typeof configExport === 'function'
+        ? await (configExport as (phase: string, context: Record<string, unknown>) => Promise<any> | any)(
+            'phase-production-build',
+            {}
+          )
+        : nextConfig;
     expect(typeof resolvedConfig.headers).toBe('function');
 
     const headersList = await resolvedConfig.headers();

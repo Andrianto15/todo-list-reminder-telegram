@@ -1,4 +1,4 @@
-import { verifyCronSecret } from '@/app/api/remind/route';
+import { verifyCronSecret } from '@/lib/security/cron';
 
 describe('verifyCronSecret', () => {
   const originalEnv = process.env.CRON_SECRET;
