@@ -1,115 +1,144 @@
-<!--
-Nama File    : README.md
-Deskripsi    : Dokumentasi proyek To-Do Reminder PWA dengan Integrasi Telegram Bot
-Dibuat oleh  : Tim Pengembang (Built with Vibe Coding)
-Tanggal      : Agustus 2026
--->
+<p align="center">
+  <img src="public/icons/logo.png" alt="To-Do Reminder Logo" width="128" height="128" />
+</p>
 
-# To-Do Reminder PWA dengan Integrasi Telegram Bot
+<h1 align="center">To-Do Reminder PWA & Telegram Bot</h1>
 
-> ⚡ **Aplikasi ini dibangun dengan pendekatan *Vibe Coding*** — perancangan cepat, iteratif, dan fokus pada efisiensi serta user experience yang seamless.
+<p align="center">
+  Progressive Web App (PWA) modern untuk manajemen tugas harian dengan sistem pengingat persisten (persistent reminder) terintegrasi dua arah ke Telegram Bot.
+</p>
 
-Aplikasi manajemen tugas personal berbasis **Progressive Web App (PWA)** yang terintegrasi secara dua arah dengan **Telegram Bot**. Dirancang untuk mempermudah pengelolaan tugas harian dengan notifikasi pengingat persisten (*persistent reminder*) langsung ke akun Telegram pengguna serta aksi instan tanpa perlu membuka aplikasi web.
-
-Untuk spesifikasi detail kebutuhan fungsional dan teknis, silakan lihat [Product Requirements Document (PRD)](docs/PRD.md).
-
----
-
-## 🚀 Fitur & Kemampuan Utama
-
-- 📋 **Manajemen Tugas**: Pembuatan, pengeditan, penyortiran descending, pengelompokan tanggal, hingga filter summary progres harian dan total tugas selesai.
-- 🔔 **Persistent Reminder via Telegram**: Pengingat otomatis berkala langsung ke chat Telegram saat tugas jatuh tempo.
-- 🤖 **Integrasi Dua Arah Telegram Bot**: Koneksi akun satu-klik via token dan tombol inline keyboard (`callback_query`) untuk menyelesaikan tugas instan dari chat Telegram.
-- 📱 **Progressive Web App (PWA)**: UI responsif mobile-first, instalasi *Home Screen* (Android, iOS, Desktop), dan aset visual maskot resmi.
-- 🔒 **Keamanan & Multi-User**: Autentikasi Supabase (Email & Google OAuth), Row Level Security (RLS) terisolasi per user, dan penonaktifan akun via *Soft Delete*.
-
-> 📖 **Detail Spesifikasi & Logika Bisnis**: Seluruh rincian kebutuhan fungsional (FR-0.1 s/d FR-4.6), diagram alur, dan aturan bisnis dipusatkan pada [docs/PRD.md](docs/PRD.md).
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16.4.3-black?logo=next.js" alt="Next.js Version" />
+  <img src="https://img.shields.io/badge/React-19.3.1-blue?logo=react" alt="React Version" />
+  <img src="https://img.shields.io/badge/TypeScript-5.9.3-3178c6?logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/TailwindCSS-v4.3.3-38bdf8?logo=tailwindcss" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Supabase-SSR-3ecf8e?logo=supabase" alt="Supabase SSR" />
+  <img src="https://img.shields.io/badge/grammY-1.46.0-2ca5e0?logo=telegram" alt="grammY" />
+  <img src="https://img.shields.io/badge/Tests-69%20passed-brightgreen?logo=jest" alt="Jest Tests" />
+  <img src="https://img.shields.io/badge/PWA-Ready-orange" alt="PWA Ready" />
+</p>
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+Aplikasi manajemen tugas berbasis **Progressive Web App (PWA)** mobile-first yang dirancang untuk mempermudah produktivitas harian. Dilengkapi sistem pengingat persisten otomatis via **Telegram Bot**, pengguna dapat menerima notifikasi pengingat tepat waktu dan menyelesaikan tugas langsung melalui tombol interaktif di Telegram tanpa perlu membuka aplikasi web.
 
-### Frontend & UI
-- **[Next.js 16 (App Router)](https://nextjs.org/)** — Framework React modern berbasis server & client component.
-- **[React 19](https://react.dev/)** — Library inti antarmuka deklaratif.
-- **[TypeScript](https://www.typescriptlang.org/)** — Static typing untuk keandalan kode.
-- **[Tailwind CSS v4](https://tailwindcss.com/)** — Framework utilitas styling modern.
-- **[Framer Motion](https://www.framer.com/motion/)** & **[Lucide React](https://lucide.dev/)** — Animasi UI halus dan icon pack modern.
-- **[Sonner](https://sonner.emilkowal.ski/)** — Notifikasi toast interaktif.
-
-### Backend, Database & Auth
-- **[Supabase](https://supabase.com/)** — PostgreSQL Database, Authentication (Email & Google OAuth), dan Row Level Security (RLS).
-- **[@supabase/ssr](https://supabase.com/docs/guides/auth/server-side/nextjs)** — Session management sisi server pada Next.js App Router.
-
-### Integrasi Telegram, PWA & Scheduler
-- **[grammY](https://grammy.dev/)** — Framework TypeScript untuk Telegram Bot API & Webhook handler.
-- **[@ducanh2912/next-pwa](https://github.com/DuCanhDe/next-pwa)** — PWA engine & Service Worker builder.
-- **[date-fns](https://date-fns.org/)** — Manipulasi dan pemformatan tanggal/waktu.
-- **[Upstash QStash](https://upstash.com/docs/qstash)** — Serverless cron scheduler pemanggil endpoint pengingat (`/api/remind`).
-
-### Testing
-- **[Jest](https://jestjs.io/)** & **[ts-jest](https://kulshekhar.github.io/ts-jest/)** — Automated unit test runner & TypeScript preprocessor.
+> [!NOTE]
+> Spesifikasi fungsional lengkap (FR-0.1 s/d FR-4.6), aturan bisnis, dan diagram alur sistem terdokumentasi lengkap di [docs/PRD.md](docs/PRD.md).
 
 ---
 
-## 📁 Struktur Proyek
+## Fitur Utama
+
+- **Manajemen Tugas**: Buat, edit, hapus, dan tandai tugas dengan status (`to_do`, `done`, `hold`, `cancel`). Dilengkapi grouping tanggal, penyortiran descending, filter status, pencarian instan, dan kartu highlight Top 3 tugas prioritas.
+- **Pengingat Persisten Telegram**: Pengingat otomatis berkala langsung ke chat Telegram saat tugas jatuh tempo (`reminder_date`), dengan interval yang meningkat bertahap hingga tugas diselesaikan.
+- **Interaksi Dua Arah Telegram Bot**: Sinkronisasi akun satu-klik via pairing token (`/connect <token>`), serta tombol aksi inline (`callback_query`) di chat Telegram untuk menandai tugas selesai secara instan.
+- **PWA & Aksesibilitas Mobile-First**: Desain responsif bertema Steel Blue (`#4682b4`) & Sky Glow (`#0ea5e9`), instalasi Home Screen (Android, iOS, Desktop), sentuhan minimal 44px (WCAG 2.1 AA), keyboard focus trap, dan dukungan motion reduction.
+- **Keamanan Komprehensif**:
+  - Proteksi Row Level Security (RLS) Supabase terisolasi per akun pengguna.
+  - Otorisasi endpoint cron `/api/remind` dengan `CRON_SECRET` via header `Authorization: Bearer` atau `x-cron-secret`.
+  - Verifikasi signature webhook Telegram menggunakan `crypto.timingSafeEqual` yang aman terhadap timing attack.
+  - Sanitasi payload dan pencegahan mass assignment pada pembaruan tugas.
+  - Sanitasi HTML entity escaping pada pengiriman pesan notifikasi Telegram.
+  - Penguatan HTTP Security Headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`).
+
+---
+
+## Arsitektur & Alur Kerja
+
+```
+[ Pengguna ] ──(Browser / PWA)──> [ Next.js App Router ] ──(RLS)──> [ Supabase PostgreSQL ]
+                                            │
+                                  (/api/remind endpoint)
+                                            ▲
+[ Upstash QStash Cron ] ────────────────────┘ (Bearer CRON_SECRET)
+                                            │
+                                            ▼
+[ Telegram Bot (grammY) ] ◄──(Inline Callback)──► [ Pengguna via Chat Telegram ]
+```
+
+1. Pengguna membuat tugas dan menyetel waktu pengingat di PWA.
+2. Scheduler eksternal (Upstash QStash) memicu `/api/remind` secara terjadwal dengan autentikasi `CRON_SECRET`.
+3. Server memproses tugas yang jatuh tempo, meng-escape karakter input secara aman, dan mengirim pesan notifikasi ke akun Telegram pengguna via grammY.
+4. Pengguna dapat menyelesaikan tugas langsung dari chat Telegram melalui inline button tanpa login ke web dashboard.
+
+---
+
+## Teknologi yang Digunakan
+
+| Kategori | Teknologi | Kegunaan |
+| :--- | :--- | :--- |
+| **Frontend Framework** | [Next.js 16 (App Router)](https://nextjs.org/) | Framework React modern berbasis Server & Client Components |
+| **UI Library** | [React 19](https://react.dev/) | Library antarmuka reaktif deklaratif |
+| **Bahasa Pemrograman** | [TypeScript 5.9](https://www.typescriptlang.org/) | Tipe statis ketat untuk keandalan kode |
+| **Styling & Desain** | [Tailwind CSS v4](https://tailwindcss.com/) | Utilitas CSS modern dengan token semantik |
+| **Tipografi** | [Public Sans & JetBrains Mono](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) | Optimalisasi font native `next/font/google` |
+| **Animasi & Ikon** | [Framer Motion](https://www.framer.com/motion/) & [Lucide React](https://lucide.dev/) | Transisi visual halus & paket ikon modern |
+| **Toast Notification** | [Sonner](https://sonner.emilkowal.ski/) | Notifikasi toast interaktif |
+| **Database & Auth** | [Supabase](https://supabase.com/) | PostgreSQL, Email & Google OAuth, Row Level Security |
+| **Server-Side Auth** | [@supabase/ssr](https://supabase.com/docs/guides/auth/server-side/nextjs) | Manajemen sesi server aman di Next.js App Router |
+| **Telegram Bot API** | [grammY](https://grammy.dev/) | Framework TypeScript untuk Telegram Bot & webhook handler |
+| **PWA Engine** | [@ducanh2912/next-pwa](https://github.com/DuCanhDe/next-pwa) | Service Worker builder & caching offline |
+| **Cron Scheduler** | [Upstash QStash](https://upstash.com/docs/qstash) | Serverless cron pemanggil endpoint `/api/remind` |
+| **Testing Suite** | [Jest](https://jestjs.io/) & [ts-jest](https://kulshekhar.github.io/ts-jest/) | 14 test suites (69 automated unit tests) |
+
+---
+
+## Struktur Direktori
 
 ```text
 todo-list-reminder-telegram/
-├── changelogs/                 # Catatan riwayat perubahan berkala (CHANGELOG_<DD_MM_YYYY>.md)
+├── changelogs/                 # Catatan riwayat versi (CHANGELOG_<DD_MM_YYYY>.md)
 ├── docs/                       # Dokumentasi arsitektur, PRD, dan implementasi
-│   ├── PRD.md                  # Product Requirements Document & spesifikasi fungsional
-│   ├── TASKS.md                # Checklist progress pengembangan
-│   ├── implementation.md       # Panduan teknis implementasi & setup DDL
-│   └── summaries.md            # Rangkuman brainstorming & keputusan arsitektur
+│   ├── PRD.md                  # Product Requirements Document & spesifikasi teknis
+│   ├── DESIGN.md               # Spesifikasi design system, token warna & tipografi
+│   └── implementation.md       # Panduan query DDL SQL & panduan integrasi
 ├── public/                     # Aset statis PWA & Web App Manifest
 │   ├── favicon.ico
 │   ├── icons/                  # Icon PWA (192x192, 512x512) & logo maskot
 │   └── manifest.json
 ├── src/
-│   ├── app/                    # Next.js App Router (Routes, API & UI Pages)
-│   │   ├── (auth)/             # Route grup autentikasi (login & register)
-│   │   ├── api/                # API Endpoints (tasks, remind, telegram, account, webhook)
+│   ├── app/                    # Next.js App Router
+│   │   ├── (auth)/             # Halaman autentikasi (login & register)
+│   │   ├── api/                # API Endpoints (tasks, remind, telegram, webhook)
 │   │   ├── auth/callback/      # Redirect handler Google OAuth
-│   │   ├── dashboard/          # Dashboard utama PWA
-│   │   ├── settings/           # Pengaturan akun & koneksi Telegram Bot
-│   │   ├── globals.css         # Styling global Tailwind CSS
-│   │   └── layout.tsx          # Root Layout aplikasi
+│   │   ├── dashboard/          # Dashboard utama manajemen tugas
+│   │   ├── settings/           # Pengaturan akun & koneksi Telegram
+│   │   ├── globals.css         # Styling global Tailwind CSS & design tokens
+│   │   └── layout.tsx          # Root layout & font provider
 │   ├── components/             # Komponen UI modular
-│   │   ├── tasks/              # Komponen task (TaskCard, TaskGroup, TaskStats, Modals, Top3Highlight)
-│   │   └── ui/                 # Komponen UI umum (Navbar, Modal, FAB, StatusBadge, EmptyState)
+│   │   ├── tasks/              # Komponen domain task (TaskCard, TaskFilter, Modal, Stats)
+│   │   └── ui/                 # Komponen umum (Navbar, Modal, FAB, StatusBadge, EmptyState)
 │   ├── hooks/                  # Custom React hooks (useTasks, useTelegram, useTheme)
-│   ├── lib/                    # Helper logika & konfigurasi eksternal
+│   ├── lib/                    # Helper logika, library client & utilitas
 │   │   ├── supabase/           # Client Supabase Browser & SSR Server
-│   │   ├── telegram/           # Bot grammY & utilitas reminder
-│   │   ├── taskHistory.ts      # Helper sorting, pagination & grouping tanggal
-│   │   └── taskStats.ts        # Helper kalkulasi progres harian & total tugas
-│   ├── types/                  # Definisi TypeScript interface
-│   └── middleware.ts           # Middleware proteksi autentikasi Next.js
-├── tests/                      # Unit test suites (Jest & ts-jest)
-├── next.config.ts              # Konfigurasi Next.js & PWA plugin
-├── jest.config.js              # Konfigurasi Jest
+│   │   └── telegram/           # Bot grammY & modul formatter reminder
+│   ├── types/                  # Definisi antarmuka TypeScript
+│   └── middleware.ts           # Middleware session & route protection
+├── tests/                      # Automated unit test suites (Jest & ts-jest)
+├── next.config.ts              # Konfigurasi Next.js, HTTP security headers & PWA
 ├── package.json                # Dependencies dan script npm
 └── tsconfig.json               # Konfigurasi TypeScript
 ```
 
 ---
 
-## 🗄️ Skema Database (Supabase PostgreSQL)
+## Skema Database
 
-Aplikasi menggunakan 3 tabel utama yang dilindungi kebijakan **Row Level Security (RLS)**:
+Aplikasi menggunakan 3 tabel utama di **Supabase PostgreSQL** yang dilindungi penuh oleh kebijakan **Row Level Security (RLS)**:
 
-- `users` — Data profil pengguna terhubung dengan `auth.users` Supabase.
-- `tasks` — Data tugas harian, status (`to_do`, `done`, `hold`, `cancel`), dan metadata persistent reminder (`next_remind_at`, `reminder_count`).
-- `telegram_connections` — Relasi akun pengguna ke Telegram (`telegram_chat_id`, `connect_token`, `is_connected`).
+- `users`: Profil pengguna terikat dengan `auth.users` Supabase.
+- `tasks`: Penyimpanan tugas harian (`title`, `notes`, `status`, `reminder_date`, `reminder_count`, `next_remind_at`).
+- `telegram_connections`: Relasi pairing akun (`telegram_chat_id`, `connect_token`, `is_connected`).
 
-> 📝 Panduan query DDL SQL lengkap tersedia di file [docs/implementation.md](docs/implementation.md).
+> [!TIP]
+> Skrip DDL SQL lengkap beserta fungsi trigger dan RLS policies tersedia pada [docs/implementation.md](docs/implementation.md).
 
 ---
 
-## 🔑 Environment Variables
+## Konfigurasi Lingkungan (Environment Variables)
 
-Buat file `.env.local` pada root direktori dan sesuaikan nilai variabel berikut:
+Buat file `.env.local` pada root repositori:
 
 ```env
 # Supabase Configuration
@@ -121,60 +150,74 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 TELEGRAM_BOT_TOKEN=your-bot-token-from-botfather
 TELEGRAM_WEBHOOK_SECRET=your-webhook-secret-token
 
+# Cron Reminder Secret
+CRON_SECRET=your-random-secure-cron-secret
+
 # Application URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-> **Catatan Keamanan**: Jangan pernah mempublikasikan `SUPABASE_SERVICE_ROLE_KEY` atau `TELEGRAM_BOT_TOKEN` ke repositori publik.
+> [!IMPORTANT]
+> - `CRON_SECRET` wajib diisi untuk mengamankan endpoint `/api/remind` dari eksekusi tidak sah.
+> - `SUPABASE_SERVICE_ROLE_KEY` dan `TELEGRAM_BOT_TOKEN` merupakan kredensial privat; jangan pernah mempublikasikannya ke repositori publik.
 
 ---
 
-## ⚙️ Cara Instalasi & Setup Lokal
+## Panduan Instalasi Lokal
 
 ### 1. Prasyarat
 - **Node.js** (v18.0.0 atau lebih baru)
-- **npm**, **yarn**, **pnpm**, atau **bun**
+- Paket manajer: **npm**, **pnpm**, atau **bun**
+- Akun [Supabase](https://supabase.com/) & akun Telegram
 
-### 2. Clone Repository & Install Dependencies
+### 2. Clone Repositori & Pasang Dependensi
 ```bash
 git clone https://github.com/Andrianto15/todo-list-reminder-telegram.git
 cd todo-list-reminder-telegram
 npm install
 ```
 
-### 3. Setup Supabase
+### 3. Setup Database Supabase
 1. Buat proyek baru di [Supabase Dashboard](https://supabase.com/).
-2. Eksekusi script DDL SQL dari file [docs/implementation.md](docs/implementation.md) pada SQL Editor Supabase.
-3. Aktifkan provider **Email** dan **Google OAuth** di menu *Authentication -> Providers*.
+2. Buka **SQL Editor** di dashboard Supabase dan jalankan seluruh script DDL dari [docs/implementation.md](docs/implementation.md).
+3. Aktifkan autentikasi **Email** dan opsi **Google OAuth** pada menu *Authentication -> Providers*.
 
-### 4. Setup Telegram Bot
-1. Hubungi [@BotFather](https://t.me/BotFather) di Telegram dan jalankan perintah `/newbot`.
-2. Salin token bot yang diberikan ke variabel `TELEGRAM_BOT_TOKEN` di `.env.local`.
+### 4. Setup Bot Telegram
+1. Buka Telegram dan hubungi [@BotFather](https://t.me/BotFather), lalu buat bot baru dengan perintah `/newbot`.
+2. Salin token bot ke variabel `TELEGRAM_BOT_TOKEN` pada file `.env.local`.
+3. Set webhook bot ke URL endpoint aplikasi:
+   ```bash
+   curl -F "url=https://<your-domain>/api/webhook/telegram" \
+        -F "secret_token=<TELEGRAM_WEBHOOK_SECRET>" \
+        https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook
+   ```
 
-### 5. Jalankan Server Development
+### 5. Jalankan Server Pengembangan
 ```bash
 npm run dev
 ```
-Akses aplikasi melalui browser di [http://localhost:3000](http://localhost:3000).
+Buka peramban di [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 🕹️ Perintah CLI (Scripts)
+## Otomatisasi Reminder (Upstash QStash)
+
+Untuk memicu pemeriksaan pengingat berkala secara serverless di produksi:
+1. Buat jadwal cron di konsol [Upstash QStash](https://upstash.com/).
+2. Konfigurasikan target URL: `https://<your-domain>/api/remind` dengan interval tiap 1 menit (`* * * * *`).
+3. Tambahkan header HTTP:
+   ```http
+   Authorization: Bearer <CRON_SECRET>
+   ```
+
+---
+
+## Skrip CLI
 
 | Perintah | Deskripsi |
 | :--- | :--- |
 | `npm run dev` | Menjalankan server development Next.js lokal |
-| `npm run build` | Membuat build produksi teroptimasi |
-| `npm run start` | Menjalankan server produksi |
-| `npm run lint` | Memeriksa kualitas & styling kode (ESLint) |
-| `npm test` | Menjalankan seluruh automated unit test suite (Jest) |
-
----
-
-## 📜 Lisensi & Pengembang
-
-Proyek ini dibangun secara independen dengan pendekatan **Vibe Coding** untuk mempermudah produktivitas harian.
-
-**Dibuat oleh**: Tim Pengembang  
-**Tanggal**: Juni – Agustus 2026
-
+| `npm run build` | Melakukan build produksi teroptimasi |
+| `npm run start` | Menjalankan server hasil build produksi |
+| `npm run lint` | Memeriksa kepatuhan linter ESLint |
+| `npm test` | Menjalankan seluruh test suite otomatis (Jest) |

@@ -19,10 +19,10 @@ export default function TaskGroup({
 }: Props) {
   return (
     <div className="mb-6">
-      <h3 className="text-xs font-light text-[#737373] dark:text-slate-400 uppercase tracking-wider mb-2 px-1">
+      <h3 className="text-xs font-semibold text-[#64748b] dark:text-[#94a3b8] uppercase tracking-wider mb-2.5 px-1">
         {formatDateGroupHeader(date)}
       </h3>
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {tasks.map((task) => (
           <TaskCard
             key={task.id}
@@ -36,4 +36,3 @@ export default function TaskGroup({
     </div>
   );
 }
-

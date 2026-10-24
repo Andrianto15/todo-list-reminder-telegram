@@ -23,8 +23,27 @@ export function useTasks() {
   }, []);
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    let ignore = false;
+    const load = async () => {
+      try {
+        const res = await fetch('/api/tasks');
+        if (res.ok) {
+          const data = await res.json();
+          if (!ignore) setTasks(data);
+        } else {
+          toast.error('Gagal mengambil daftar pengingat');
+        }
+      } catch {
+        toast.error('Koneksi terputus. Silakan coba lagi.');
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    };
+    void load();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   // Optimistic Add Task
   const addTask = async (data: { title: string; notes?: string; reminder_date: string }) => {

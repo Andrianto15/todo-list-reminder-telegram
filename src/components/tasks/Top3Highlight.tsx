@@ -21,7 +21,7 @@ export default function Top3Highlight({ tasks }: Props) {
 
   return (
     <div className="mb-6">
-      <h2 className="text-xs font-light text-[#0051c3] dark:text-blue-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+      <h2 className="text-xs font-semibold text-primary dark:text-[#6ba3ce] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
         <Zap size={14} className="text-amber-500 fill-amber-500" />
         <span>Prioritas Segera</span>
       </h2>
@@ -29,14 +29,14 @@ export default function Top3Highlight({ tasks }: Props) {
         {top3.map((task) => (
           <div
             key={task.id}
-            className="bg-[#eef4fc]/70 dark:bg-slate-800 border border-[#ebebeb] dark:border-slate-700 rounded-[5px] p-3.5 shadow-xs"
+            className="bg-surface border border-border rounded-xl p-3.5 shadow-xs transition hover:shadow-md"
           >
             <div className="flex items-start justify-between gap-2">
-              <p className="text-[13px] font-medium text-[#404040] dark:text-slate-100">{task.title}</p>
+              <p className="text-sm font-semibold text-foreground">{task.title}</p>
               <StatusBadge status={task.status} />
             </div>
-            <p className="text-xs text-[#0051c3] dark:text-blue-400 font-normal mt-1.5 flex items-center gap-1">
-              <Clock size={12} />
+            <p className="text-xs text-primary dark:text-[#6ba3ce] font-medium mt-1.5 flex items-center gap-1">
+              <Clock size={13} />
               <span>{format(new Date(task.reminder_date), 'EEEE, d MMM yyyy · HH:mm', { locale: id })}</span>
             </p>
           </div>
@@ -45,4 +45,3 @@ export default function Top3Highlight({ tasks }: Props) {
     </div>
   );
 }
-

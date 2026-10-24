@@ -17,35 +17,41 @@ export default function TaskCard({ task, onEdit, onStatusChange, onDelete }: Pro
   const isEditable = !isDone && !isCancel;
 
   return (
-    <div className={`bg-white dark:bg-slate-800/90 border border-[#ebebeb] dark:border-slate-700/80 rounded-[5px] p-3.5 transition-all hover:border-[#0051c3]/40 dark:hover:border-slate-600 shadow-xs ${isDone || isCancel ? 'opacity-50' : ''}`}>
-      <div className="flex items-start gap-3">
-        {/* Checkbox done */}
+    <div className={`bg-white dark:bg-[#0f172a] border border-[#e2e8f0] dark:border-[#1e293b] rounded-xl p-3.5 sm:p-4 transition-all hover:border-[#4682b4]/40 hover:shadow-md shadow-xs ${isDone || isCancel ? 'opacity-60' : ''}`}>
+      <div className="flex items-start gap-2.5">
+        {/* Checkbox done with 44px hit bounds */}
         <button
+          role="checkbox"
+          aria-checked={isDone}
           onClick={() => onStatusChange(task.id, isDone ? 'to_do' : 'done')}
-          aria-label={isDone ? "Tandai belum selesai" : "Tandai selesai"}
-          className={`mt-0.5 w-4.5 h-4.5 rounded-[5px] border flex-shrink-0 flex items-center justify-center transition-all ${
-            isDone
-              ? 'bg-emerald-500 border-emerald-500 text-white'
-              : 'border-[#ebebeb] dark:border-slate-600 hover:border-[#0051c3] dark:hover:border-blue-400 hover:bg-[#eef4fc] dark:hover:bg-blue-950/40'
-          }`}
+          aria-label={isDone ? 'Tandai belum selesai' : 'Tandai selesai'}
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0 -m-2"
         >
-          {isDone && <Check size={11} strokeWidth={3} />}
+          <div
+            className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${
+              isDone
+                ? 'bg-emerald-500 border-emerald-500 text-white'
+                : 'border-[#cbd5e1] dark:border-[#334155] hover:border-[#4682b4] dark:hover:border-[#6ba3ce] hover:bg-[#eef5fa] dark:hover:bg-[#18283d]'
+            }`}
+          >
+            {isDone && <Check size={13} strokeWidth={3} />}
+          </div>
         </button>
 
-        <div className="flex-1 min-w-0">
-          <p className={`text-[13px] font-normal ${isDone ? 'line-through text-[#a3a3a3] dark:text-slate-500' : 'text-[#404040] dark:text-slate-100'}`}>
+        <div className="flex-1 min-w-0 pt-0.5">
+          <p className={`text-sm font-semibold leading-snug ${isDone ? 'line-through text-[#94a3b8] dark:text-[#64748b]' : 'text-[#0f172a] dark:text-[#f8fafc]'}`}>
             {task.title}
           </p>
           {task.notes && (
-            <p className="text-xs text-[#737373] dark:text-slate-400 mt-0.5 truncate">{task.notes}</p>
+            <p className="text-xs text-[#64748b] dark:text-[#94a3b8] mt-1 truncate">{task.notes}</p>
           )}
-          <div className="flex items-center gap-2.5 mt-2 text-[11px] text-[#737373] dark:text-slate-400">
+          <div className="flex items-center gap-2.5 mt-2 text-xs text-[#64748b] dark:text-[#94a3b8]">
             <span className="flex items-center gap-1">
-              <Clock size={12} className="text-[#737373] dark:text-slate-500" />
+              <Clock size={13} className="text-[#64748b] dark:text-[#94a3b8]" />
               {format(new Date(task.reminder_date), 'HH:mm', { locale: id })}
             </span>
             {task.reminder_count > 0 && (
-              <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-[5px] font-medium text-[10px]">
+              <span className="inline-flex items-center gap-1 text-amber-800 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-full font-semibold text-[10px]">
                 <Bell size={10} />
                 <span>Pengingat #{task.reminder_count}</span>
               </span>
@@ -53,24 +59,26 @@ export default function TaskCard({ task, onEdit, onStatusChange, onDelete }: Pro
           </div>
         </div>
 
-        <div className="flex items-center gap-1 flex-shrink-0">
+        <div className="flex items-center gap-1 shrink-0 pt-0.5">
           <StatusBadge status={task.status} />
           {isEditable && (
             <button
               onClick={onEdit}
-              className="text-[#737373] dark:text-slate-400 hover:text-[#0051c3] dark:hover:text-blue-400 p-1.5 rounded-[5px] hover:bg-[#ebebeb]/50 dark:hover:bg-slate-700/60 transition"
+              className="text-[#64748b] dark:text-[#94a3b8] hover:text-[#4682b4] dark:hover:text-[#6ba3ce] p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-[#e2e8f0]/50 dark:hover:bg-[#1e293b] transition"
               title="Edit Task"
+              aria-label="Edit Task"
             >
-              <Pencil size={13} />
+              <Pencil size={14} />
             </button>
           )}
           {onDelete && (
             <button
               onClick={onDelete}
-              className="text-[#737373] dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 p-1.5 rounded-[5px] hover:bg-red-50 dark:hover:bg-red-950/40 transition"
+              className="text-[#64748b] dark:text-[#94a3b8] hover:text-red-600 dark:hover:text-red-400 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-950/40 transition"
               title="Hapus Task"
+              aria-label="Hapus Task"
             >
-              <Trash2 size={13} />
+              <Trash2 size={14} />
             </button>
           )}
         </div>
@@ -78,5 +86,3 @@ export default function TaskCard({ task, onEdit, onStatusChange, onDelete }: Pro
     </div>
   );
 }
-
-

@@ -22,10 +22,10 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white dark:bg-slate-900 border-b border-[#ebebeb] dark:border-slate-800 sticky top-0 z-30 transition-colors">
+    <nav className="bg-surface border-b border-border sticky top-0 z-30 transition-colors">
       <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-[5px] overflow-hidden shadow-xs group-hover:opacity-90 transition-opacity flex items-center justify-center bg-[#eef4fc] dark:bg-slate-800 border border-[#ebebeb] dark:border-slate-700">
+        <Link href="/dashboard" className="flex items-center gap-2.5 group min-h-[44px]">
+          <div className="w-8 h-8 rounded-lg overflow-hidden shadow-xs group-hover:opacity-90 transition-opacity flex items-center justify-center bg-[#eef5fa] dark:bg-[#18283d] border border-[#e2e8f0] dark:border-[#1e293b]">
             <Image
               src="/icons/logo.png"
               alt="Todo Reminder Logo"
@@ -35,7 +35,7 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className="font-semibold text-[13px] text-[#404040] dark:text-slate-100 tracking-tight">
+          <span className="font-semibold text-sm text-[#0f172a] dark:text-[#f8fafc] tracking-tight">
             Todo Reminder
           </span>
         </Link>
@@ -43,29 +43,30 @@ export default function Navbar() {
         <div className="flex items-center gap-1.5">
           <Link
             href="/settings/telegram"
-            className={`text-xs font-medium px-3 py-1.5 rounded-[5px] transition flex items-center gap-1.5 ${
+            className={`text-xs font-medium px-3 py-2 min-h-[44px] rounded-lg transition flex items-center gap-1.5 ${
               pathname === '/settings/telegram'
-                ? 'bg-[#eef4fc] dark:bg-blue-950/60 text-[#0051c3] dark:text-blue-400 font-semibold'
-                : 'text-[#404040] dark:text-slate-300 hover:bg-[#ebebeb]/50 dark:hover:bg-slate-800'
+                ? 'bg-[#eef5fa] dark:bg-[#18283d] text-[#4682b4] dark:text-[#6ba3ce] font-semibold'
+                : 'text-[#64748b] dark:text-[#94a3b8] hover:bg-[#e2e8f0]/50 dark:hover:bg-[#1e293b]'
             }`}
           >
-            <Send size={14} className={pathname === '/settings/telegram' ? 'text-[#0051c3] dark:text-blue-400' : 'text-[#737373] dark:text-slate-400'} />
+            <Send size={15} className={pathname === '/settings/telegram' ? 'text-[#4682b4] dark:text-[#6ba3ce]' : 'text-[#64748b] dark:text-[#94a3b8]'} />
             <span>Telegram</span>
           </Link>
 
           <button
             onClick={toggleTheme}
-            className="text-[#737373] dark:text-slate-400 hover:text-[#0051c3] dark:hover:text-blue-400 transition p-2 rounded-[5px] hover:bg-[#ebebeb]/50 dark:hover:bg-slate-800"
+            className="text-[#64748b] dark:text-[#94a3b8] hover:text-[#4682b4] dark:hover:text-[#6ba3ce] transition p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-[#e2e8f0]/50 dark:hover:bg-[#1e293b]"
             title={theme === 'light' ? 'Mode Gelap' : 'Mode Terang'}
-            aria-label="Toggle Theme"
+            aria-label="Ubah Tema"
           >
             {theme === 'light' ? <Moon size={16} /> : <Sun size={16} className="text-amber-400" />}
           </button>
 
           <button
             onClick={handleLogout}
-            className="text-[#737373] dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition p-2 rounded-[5px] hover:bg-red-50 dark:hover:bg-red-950/40"
+            className="text-[#64748b] dark:text-[#94a3b8] hover:text-red-600 dark:hover:text-red-400 transition p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-950/40"
             title="Keluar"
+            aria-label="Keluar"
           >
             <LogOut size={16} />
           </button>
@@ -74,5 +75,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
-

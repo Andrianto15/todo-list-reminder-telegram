@@ -44,7 +44,6 @@ export default function DashboardPage() {
     setVisibleCount(PAGE_SIZE);
   };
 
-  // Filter tasks berdasarkan query pencarian dan tab status, lalu urutkan descending (terbaru ke terlama)
   const filteredTasks = useMemo(() => {
     const filtered = tasks.filter((t) => {
       const matchSearch =
@@ -56,7 +55,6 @@ export default function DashboardPage() {
     return sortTasksDescending(filtered);
   }, [tasks, search, statusFilter]);
 
-  // Hitung jumlah task per status untuk badge filter
   const filterCounts = useMemo(() => {
     const counts: Record<TaskStatus | 'all', number> = {
       all: tasks.length,
@@ -73,18 +71,16 @@ export default function DashboardPage() {
     return counts;
   }, [tasks]);
 
-  // Potong task sesuai limit pagination
   const displayedTasks = useMemo(() => {
     return paginateTasks(filteredTasks, visibleCount);
   }, [filteredTasks, visibleCount]);
 
-  // Kelompokkan displayed tasks berdasarkan tanggal pengingat (descending)
   const grouped = useMemo(() => {
     return groupTasksByDate(displayedTasks);
   }, [displayedTasks]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors">
+    <div className="min-h-screen bg-background transition-colors">
       <Navbar />
       <div className="max-w-lg mx-auto px-4 py-6 pb-24">
         {loading ? (
@@ -105,7 +101,7 @@ export default function DashboardPage() {
             />
 
             {filteredTasks.length === 0 ? (
-              <div className="text-center py-12 text-xs text-[#737373] dark:text-slate-500">
+              <div className="text-center py-12 text-sm text-[#64748b] dark:text-[#94a3b8]">
                 Tidak ada pengingat yang cocok dengan pencarian / filter.
               </div>
             ) : (
@@ -125,7 +121,7 @@ export default function DashboardPage() {
                   <div className="mt-2 mb-4 flex justify-center">
                     <button
                       onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                      className="w-full py-2.5 px-4 rounded-[5px] text-[13px] font-medium text-[#0051c3] dark:text-blue-400 bg-[#eef4fc] hover:bg-[#e0ecfb] dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-[#0051c3]/20 dark:border-blue-900/60 transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.99]"
+                      className="w-full py-2.5 px-4 rounded-lg text-sm font-semibold text-[#4682b4] dark:text-[#6ba3ce] bg-[#eef5fa] hover:bg-[#e0edf7] dark:bg-[#18283d] dark:hover:bg-[#203652] border border-[#4682b4]/30 dark:border-[#1e293b] min-h-[44px] transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.99]"
                     >
                       <span>Load More...</span>
                       <ChevronDown size={14} />
@@ -137,7 +133,6 @@ export default function DashboardPage() {
           </>
         )}
       </div>
-
 
       <FAB onClick={() => setShowAdd(true)} />
 
@@ -175,5 +170,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-

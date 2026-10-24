@@ -4,6 +4,7 @@ import {
   formatReminderMessage,
   getReminderInlineKeyboard,
   isTaskEligibleForReminder,
+  escapeHtml,
 } from '@/lib/telegram/reminder';
 import { Task } from '@/types';
 
@@ -132,6 +133,30 @@ describe('Telegram Reminder Helper', () => {
       const msg = formatReminderMessage(task);
       expect(msg).toContain('🚨 <b>Pengingat Tugas</b>');
       expect(msg).toContain('<i>Pengingat ke-5</i>');
+    });
+
+    it('escapes HTML special characters in task title and notes to prevent HTML injection and parse errors', () => {
+      const task: Task = {
+        ...baseTask,
+        title: '<Test> & "Urgent" Task',
+        notes: 'Check <https://example.com> & alert("done")',
+      };
+
+      const msg = formatReminderMessage(task);
+      expect(msg).toContain('📌 <b>&lt;Test&gt; &amp; &quot;Urgent&quot; Task</b>');
+      expect(msg).toContain('📝 Check &lt;https://example.com&gt; &amp; alert(&quot;done&quot;)');
+      expect(msg).not.toContain('<Test>');
+      expect(msg).not.toContain('<https://example.com>');
+    });
+  });
+
+  describe('escapeHtml', () => {
+    it('escapes &, <, >, ", and \' characters correctly', () => {
+      expect(escapeHtml('A & B')).toBe('A &amp; B');
+      expect(escapeHtml('<script>')).toBe('&lt;script&gt;');
+      expect(escapeHtml('"hello"')).toBe('&quot;hello&quot;');
+      expect(escapeHtml("it's")).toBe('it&#39;s');
+      expect(escapeHtml('Safe text 123')).toBe('Safe text 123');
     });
   });
 

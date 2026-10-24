@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { sanitizeTaskUpdate } from '@/lib/security/tasks';
 
 export async function PATCH(
   request: Request,
@@ -15,23 +16,26 @@ export async function PATCH(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await request.json();
-
-  // Jika reminder_date diperbarui, reset jadwal pengingat
-  if (body.reminder_date) {
-    body.next_remind_at = body.reminder_date;
-    body.reminder_count = 0;
-    body.last_reminded_at = null;
+  let rawBody: Record<string, unknown>;
+  try {
+    rawBody = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
   }
 
-  // Jika status diubah ke done/cancel, matikan reminder selanjutnya
-  if (body.status === 'done' || body.status === 'cancel') {
-    body.next_remind_at = null;
+  const { payload, hasValidFields } = sanitizeTaskUpdate(rawBody);
+  if (!hasValidFields) {
+    return NextResponse.json(
+      { error: 'No valid fields provided for update' },
+      { status: 400 }
+    );
   }
+
+  payload.updated_at = new Date().toISOString();
 
   const { data, error } = await supabase
     .from('tasks')
-    .update(body)
+    .update(payload)
     .eq('id', id)
     .eq('user_id', user.id)
     .select()

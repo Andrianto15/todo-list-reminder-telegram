@@ -42,16 +42,27 @@ export function formatReminderDate(dateStr: string): string {
   return `${map.weekday}, ${map.day} ${map.month} ${map.year} · ${map.hour}:${map.minute}`;
 }
 
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export function formatReminderMessage(task: Task): string {
   const urgencyEmoji = task.reminder_count === 0 ? '🔔' : task.reminder_count <= 3 ? '⚠️' : '🚨';
   const reminderText = task.reminder_count > 0 ? `\n<i>Pengingat ke-${task.reminder_count + 1}</i>` : '';
+  const escapedTitle = escapeHtml(task.title);
+  const escapedNotes = task.notes ? escapeHtml(task.notes) : null;
 
   return `${urgencyEmoji} <b>Pengingat Tugas</b>${reminderText}
 
-📌 <b>${task.title}</b>
+📌 <b>${escapedTitle}</b>
 
 🕐 ${formatReminderDate(task.reminder_date)}${
-    task.notes ? `\n\n📝 ${task.notes}` : ''
+    escapedNotes ? `\n\n📝 ${escapedNotes}` : ''
   }`;
 }
 

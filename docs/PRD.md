@@ -2,17 +2,24 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.4
-* **Date:** 16 Agustus 2026
+* **Version:** 3.11
+* **Date:** 24 Oktober 2026
 * **Author:** Project Owner
 * **Changelog:**
-  * v1.0 — Draft awal
-  * v2.0 — Tambah auth, soft delete, persistent reminder, pisah tabel `telegram_connections`
-  * v3.0 — Tambah detail API routes, struktur folder, flow koneksi Telegram, catatan teknis deployment
-  * v3.1 — Update branding maskot aplikasi (Favicon browser, PWA home screen icons 192x192 & 512x512, dan Navbar logo)
-  * v3.2 — Format waktu reminder Telegram UTC+7 (WIB) & penambahan inline keyboard Done, Hold, Cancel
-  * v3.3 — Implementasi Design Tokens (`docs/DESIGN.md`): Primary `#0051c3`, font stack `-apple-system`, body `13px`/400, heading 300, surface/border `#ebebeb`, text `#404040`, radius `5px`, motion `150ms ease`.
-  * v3.4 — Update format tanggal Top 3 Highlight menyertakan tahun (`Minggu, 16 Agt 2026 · 21:30`) dan standardisasi header Task History ke format bahasa Indonesia dengan tahun (`MINGGU, 16 AGT 2026`).
+  * v1.0: Draft awal
+  * v2.0: Tambah auth, soft delete, persistent reminder, pisah tabel telegram_connections
+  * v3.0: Tambah detail API routes, struktur folder, flow koneksi Telegram, catatan teknis deployment
+  * v3.1: Update branding maskot aplikasi (Favicon browser, PWA home screen icons 192x192 & 512x512, dan Navbar logo)
+  * v3.2: Format waktu reminder Telegram UTC+7 (WIB) & penambahan inline keyboard Done, Hold, Cancel
+  * v3.3: Implementasi Design Tokens awal (Cobalt #0051c3, -apple-system, 13px)
+  * v3.4: Update format tanggal Top 3 Highlight menyertakan tahun (Minggu, 16 Agt 2026 · 21:30) dan standardisasi header Task History ke format bahasa Indonesia dengan tahun (MINGGU, 16 AGT 2026)
+  * v3.5: Pembaruan minor & patch dependency packages (Next.js 16.4.3, React 19.3.1, Supabase SSR 0.12.7 & JS 2.118.0, grammY 1.46.0, TypeScript 5.9.3, Jest 30.5.2) serta penyesuaian ESLint Flat Config (public/** ignore & hook rules)
+  * v3.6: Pembaruan Design System menyeluruh berdasarkan docs/DESIGN.md: Primary Steel Blue #4682b4 (hover: #36648b), Accent Sky Glow #0ea5e9, Canvas Background #f8fafc (dark: #090d16), Card Surface #ffffff (dark: #0f172a), Border #e2e8f0 (dark: #1e293b), Text Main #0f172a (dark: #f8fafc), Text Muted #64748b (dark: #94a3b8), tipografi Public Sans dan JetBrains Mono, type scale body 0.875rem (14px), radius tokens (sm: 0.375rem, md: 0.5rem, lg: 0.75rem, xl: 1rem, full: 9999px), elevasi shadow vocabulary (card rest, card hover, modal float), dan mobile-first min 44px tap targets
+  * v3.7: Audit teknis Impeccable & Quality Polish: Aksesibilitas WCAG 2.1 AA (form control IDs & labels, modal focus trap & escape restoration, ARIA progressbar/tablist/checkbox), kontras warna status badge ≥ 4.5:1, transisi reduced-motion 80ms, migrasi next/font/google, themed selection & caret color Steel Blue, dan eliminasi residual token manual pada seluruh utility surfaces.
+  * v3.8: Perbaikan layout text input "Cari Tugas" (TaskFilter): isolasi styling dasar form controls ke @layer base di globals.css dan penegasan padding eksplisit (!pl-10 !pr-10) serta pointer-events-none pada icon Search untuk mencegah tumpang tindih visual dan memastikan interaksi tap/click responsif di mobile.
+  * v3.9: Remediasi Keamanan (Security Audit): Proteksi otentikasi secret token pada /api/remind (CRON_SECRET via Bearer/x-cron-secret), HTML entity escaping pada pesan Telegram untuk mencegah HTML injection & parsing DoS, sanitasi payload & pencegahan mass assignment pada PATCH /api/tasks/[id], penguatan verifikasi timing-safe secret pada webhook Telegram, konfigurasi HTTP security headers di next.config.ts, dan klarifikasi RLS policy telegram_connections.
+  * v3.10: Pemutakhiran Dokumentasi Proyek (README.md) menyeluruh sesuai standar skill create-readme: penambahan visual header logo maskot resmi, penyelarasan dependency mutakhir, penambahan dokumentasi keamanan & arsitektur Upstash cron scheduler, implementasi GitHub admonitions GFM, dan pembersihan seksi lisensi redundan.
+  * v3.11: Modularisasi Helper Keamanan API: Pemisahan fungsi pembantu otentikasi & sanitasi (`verifyCronSecret`, `verifyTelegramWebhookSecret`, `sanitizeTaskUpdate`) dari file route handler ke modul pustaka mandiri `src/lib/security/` guna mematuhi batasan ekspor modul Next.js App Router route handlers serta perbaikan type signature pemanggilan NextConfig pada unit test.
 
 ---
 
@@ -43,7 +50,7 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 | **Frontend** | Next.js 14+ (App Router, TypeScript) + Tailwind CSS |
 | **PWA Engine** | `@ducanh2912/next-pwa` + Web App Manifest |
 | **Backend & Database** | Supabase (PostgreSQL) + Supabase Edge Functions (Deno/TypeScript) |
-| **Auth** | Supabase Auth — Email/Password + Google OAuth |
+| **Auth** | Supabase Auth: Email/Password + Google OAuth |
 | **Bot Integration** | Telegram Bot API via `grammY` |
 | **Cron Job** | Upstash Workflow (interval 1–5 menit) |
 | **Hosting** | Vercel (Frontend & API) + Supabase Cloud |
@@ -62,11 +69,10 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 * **FR-1.2:** Aplikasi memiliki Web App Manifest dan mendukung pemuatan instan via Service Workers.
 * **FR-1.3 App Branding & Assets:** Aplikasi menggunakan aset logo maskot jam alarm resmi yang seragam pada Favicon browser (`src/app/favicon.ico`), PWA Home Screen icons (`public/icons/icon-192x192.png`, `public/icons/icon-512x512.png`), dan Navbar header (`public/icons/logo.png`).
 * **FR-1.4 Design System & Token Integration:** Aplikasi menerapkan sistem token desain resmi (`docs/DESIGN.md`):
-  * **Colors:** Primary `#0051c3` (Cobalt/Royal Blue), Foreground text `#404040`, Surface `#ebebeb`, Border `#ebebeb`, Background `#ffffff`, Text Muted `#737373`.
-  * **Typography:** Font stack `-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Helvetica Neue, Arial, sans-serif`. Body `13px` (regular 400, line-height 1.5), Headings font-weight `300` (line-height 1.3).
-  * **Spacing:** Base unit `3px` (scale: 3, 15, 30, 60).
-  * **Corner Radius:** `5px` (`rounded-[5px]`).
-  * **Motion & Transition:** Durasi `150ms`, easing `ease`.
+  * **Colors:** Primary `#4682b4` (Steel Blue / hover: `#36648b`), Accent `#0ea5e9` (Sky Glow), Foreground text `#0f172a` (dark: `#f8fafc`), Card Surface `#ffffff` (dark: `#0f172a`), Border `#e2e8f0` (dark: `#1e293b`), Background `#f8fafc` (dark: `#090d16`), Text Muted `#64748b` (dark: `#94a3b8`).
+  * **Typography:** Font stack `Public Sans` (fallback: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif) dan `JetBrains Mono` untuk kode / monospaced. Body `0.875rem` (14px, regular 400, line-height 1.5).
+  * **Shapes & Radius:** xs (`4px`), sm (`0.375rem`), md (`0.5rem`), lg (`0.75rem`), xl (`1rem`), full (`9999px`).
+  * **Elevation & Motion:** Hairline borders grounded, interactive shadow vocabulary (card rest, card hover, modal float), durasi 150ms ease, mobile-first min 44px touch targets.
 
 ### 4.3 Task Management (CRUD)
 * **FR-2.1 Input Task:** User dapat memasukkan judul tugas, tanggal & waktu reminder, dan catatan tambahan (opsional).
@@ -91,6 +97,9 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
   * Tampilan awal membatasi maksimal 5 data teratas.
   * Menyediakan tombol aksi mobile-first **"Load More..."** di bagian bawah daftar untuk memuat 5 data berikutnya secara bertahap hingga seluruh data ditampilkan.
   * Reset limit tampilan kembali ke 5 setiap kali filter status atau query pencarian berubah.
+* **FR-3.5 Task Search & Filter Controls:**
+  * Input pencarian tugas dilengkapi ikon kaca pembesar non-blocking (`pointer-events-none`) dan padding kiri/kanan eksplisit (`!pl-10 !pr-10`) agar teks placeholder/input serta tombol pembersih pencarian tidak tumpang tindih.
+  * Elemen dasar input/textarea/select di `globals.css` diisolasi ke dalam `@layer base` untuk mempertahankan spesifisitas utilitas Tailwind.
 
 ### 4.5 Telegram Bot Integration & Persistent Reminder
 * **FR-4.1 Koneksi Akun:** User menghubungkan akun Telegram mereka melalui halaman Settings. Flow: generate token unik di app → user kirim token ke bot → bot verifikasi & simpan `telegram_chat_id`.
@@ -108,11 +117,16 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 ---
 
 ## 5. Non-Functional Requirements (NFR)
-
-* **NFR-1 Security:** Webhook Telegram diamankan dengan Secret Token Verification.
+ 
+* **NFR-1 Security:**
+  * Webhook Telegram diamankan dengan secret token verification timing-safe (`crypto.timingSafeEqual`).
+  * Endpoint `/api/remind` diamankan dengan `CRON_SECRET` (Bearer token atau header `x-cron-secret`) untuk mencegah eksekusi tanpa izin.
+  * Pesan reminder Telegram meng-escape karakter HTML khusus (`&`, `<`, `>`, `"`, `'`) guna mencegah injeksi HTML dan kegagalan parsing Telegram API.
+  * Endpoint PATCH `/api/tasks/[id]` menerapkan allowlisting field ketat untuk mencegah mass assignment / arbitrary field injection.
+  * Aplikasi menyertakan HTTP Security Headers (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`).
 * **NFR-2 Performance:** Load time dashboard < 1.5 detik (dioptimalkan via SSR + Supabase query).
 * **NFR-3 Reliability:** Cron Job berjalan tiap 1–5 menit untuk akurasi pengiriman reminder.
-* **NFR-4 Data Isolation:** Row Level Security (RLS) Supabase memastikan tiap user hanya bisa akses data miliknya.
+* **NFR-4 Data Isolation:** Row Level Security (RLS) Supabase memastikan tiap user hanya bisa akses data miliknya (tabel `telegram_connections` dibatasi hanya `SELECT` untuk client role).
 
 ---
 
@@ -122,17 +136,18 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 | :--- | :--- | :--- | :--- |
 | `GET` | `/api/tasks` | Ambil semua task milik user | ✅ Required |
 | `POST` | `/api/tasks` | Tambah task baru | ✅ Required |
-| `PATCH` | `/api/tasks/[id]` | Edit task atau update status | ✅ Required |
+| `PATCH` | `/api/tasks/[id]` | Edit task atau update status (allowlist sanitized) | ✅ Required |
 | `POST` | `/api/telegram/connect` | Generate token koneksi Telegram | ✅ Required |
 | `POST` | `/api/account/deactivate` | Soft delete akun user | ✅ Required |
-| `POST` | `/api/remind` | Trigger cron: kirim reminder ke Telegram | 🔒 Internal (Upstash) |
-| `POST` | `/api/webhook/telegram` | Terima callback dari Telegram Bot | 🔒 Secret Token |
+| `POST` | `/api/remind` | Trigger cron: kirim reminder ke Telegram | 🔒 CRON_SECRET |
+| `POST` | `/api/webhook/telegram` | Terima callback dari Telegram Bot | 🔒 Secret Token (Timing-Safe) |
 | `GET` | `/auth/callback` | Handler redirect setelah Google OAuth | — |
 
 **Catatan:**
-- `/api/remind` dipanggil oleh Upstash QStash, bukan oleh user langsung.
-- `/api/webhook/telegram` divalidasi via header `x-telegram-bot-api-secret-token`.
-- Semua route yang butuh auth menggunakan Supabase SSR session — tidak ada JWT manual.
+- `/api/remind` dipanggil oleh Upstash QStash / Cron service dengan header `Authorization: Bearer <CRON_SECRET>` atau `x-cron-secret`.
+- `/api/webhook/telegram` divalidasi via header `x-telegram-bot-api-secret-token` menggunakan `crypto.timingSafeEqual`.
+- Endpoint `/api/tasks/[id]` membatasi field update hanya pada `title`, `notes`, `status`, dan `reminder_date`.
+- Semua route yang butuh auth user menggunakan Supabase SSR session — tidak ada JWT manual.
 
 ---
 
@@ -207,6 +222,7 @@ todo-pwa/
 │   │   ├── telegram/     → TelegramConnect, TelegramStatus
 │   │   └── ui/           → Modal, FAB, EmptyState, Navbar
 │   ├── lib/
+│   │   ├── security/     → cron.ts, telegram.ts, tasks.ts
 │   │   ├── supabase/     → client.ts, server.ts
 │   │   └── telegram/     → bot.ts, reminder.ts
 │   ├── types/index.ts
@@ -224,8 +240,11 @@ todo-pwa/
 
 ### Security
 - `SUPABASE_SERVICE_ROLE_KEY` **hanya** dipakai di server-side API routes (`/api/remind`, `/api/webhook`). Jangan pernah diekspos ke client.
-- Webhook Telegram divalidasi via header `x-telegram-bot-api-secret-token` — tolak request jika tidak cocok.
-- RLS aktif di semua tabel — user hanya bisa akses data dengan `user_id = auth.uid()`.
+- Webhook Telegram divalidasi via header `x-telegram-bot-api-secret-token` menggunakan perbandingan timing-safe (`crypto.timingSafeEqual`) — tolak request jika token tidak valid atau secret server belum diset.
+- Endpoint `/api/remind` diproteksi dengan `CRON_SECRET` (Bearer token atau header `x-cron-secret`) untuk mencegah eksekusi sepihak dari pihak ketiga.
+- Pesan Telegram difilter dengan HTML entity escaping (`&`, `<`, `>`, `"`, `'`) sebelum dikirimkan dengan `parse_mode: 'HTML'` guna mencegah injection & error fatal Telegram API.
+- Endpoint `/api/tasks/[id]` mengisolasi field update dengan sanitasi allowlist (`title`, `notes`, `status`, `reminder_date`) untuk mencegah mass assignment.
+- RLS aktif di semua tabel — user hanya bisa akses data dengan `user_id = auth.uid()`. Akses `telegram_connections` dari client dibatasi hanya `SELECT`.
 
 ### Persistent Reminder Logic
 - Saat task dibuat: `next_remind_at = reminder_date`, `reminder_count = 0`.
@@ -254,10 +273,34 @@ WHERE tasks.status = 'to_do'
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only | Service role key — jangan ekspos ke client |
 | `TELEGRAM_BOT_TOKEN` | Server only | Token dari BotFather |
 | `TELEGRAM_WEBHOOK_SECRET` | Server only | String random untuk validasi webhook |
+| `CRON_SECRET` | Server only | Token rahasia otentikasi cron job (/api/remind) |
 | `NEXT_PUBLIC_APP_URL` | Public | URL production app (untuk OAuth callback) |
 
 ### Dokumen Terkait
 - `summaries.md` — ringkasan sesi brainstorming dan keputusan desain
 - `implementation.md` — panduan implementasi detail + boilerplate kode fase 1–5
 - `checklist.md` — tracking progress per item (80 item total)
+
+---
+
+## 8. Standar Kualitas, Aksesibilitas (WCAG AA), dan Optimasi UI
+
+Implementasi mengikuti standar teknis berikut:
+1. **Aksesibilitas Form & Kontrol (WCAG 2.1 AA)**:
+   - Seluruh elemen input, textarea, dan select memiliki atribut `id` unik yang terhubung dengan `<label htmlFor="...">`.
+   - Dialog modal dilengkapi focus trap loop (Tab / Shift+Tab) dan auto-focus restoration ke pemicu modal saat ditutup.
+   - Indikator progres tugas (`TaskStats`) memiliki atribut `role="progressbar"`, `aria-valuenow`, `aria-valuemin={0}`, dan `aria-valuemax={100}`.
+   - Filter tab memiliki atribut `role="tablist"`, `role="tab"`, dan `aria-selected`.
+   - Tombol toggle checklist status tugas memiliki `role="checkbox"` dan `aria-checked`.
+2. **Kontras Warna & Tipografi**:
+   - Status badge memenuhi rasio kontras teks minimum 4.5:1 (`to_do` teks `#2b5373`, `hold` teks `amber-800`, `done` teks `emerald-700`).
+   - Font dimigrasikan ke `next/font/google` (`Public_Sans`, `JetBrains_Mono`) untuk zero layout shift (CLS) dan self-hosting otomatis.
+3. **Sentuhan Mobile & Motion Sensitivity**:
+   - Seluruh interactive pills / tap target memiliki tinggi minimum 44px (`min-h-[44px]`).
+   - Aturan `@media (prefers-reduced-motion: reduce)` menggunakan transisi cepat 80ms untuk mempertahankan feedback visual tanpa efek gerak agresif.
+4. **Themed Browser Surfaces & Token Semantik**:
+   - Styling `::selection` terintegrasi dengan palet brand Steel Blue (`rgba(70, 130, 180, 0.25)`).
+   - Input controls memiliki `caret-color: var(--primary)`.
+   - Seluruh komponen utility terikat token semantik (`bg-surface`, `border-border`, `text-foreground`, `text-muted`).
+
 
