@@ -9,12 +9,12 @@ interface Props {
 export default function EmptyState({ onAdd }: Props) {
   return (
     <div className="text-center py-16 px-4 space-y-4">
-      <div className="w-14 h-14 bg-[#eef5fa] dark:bg-[#18283d] text-[#4682b4] dark:text-[#6ba3ce] rounded-xl flex items-center justify-center mx-auto border border-[#e2e8f0] dark:border-[#1e293b]">
+      <div className="w-14 h-14 bg-[#eef5fa] dark:bg-[#18283d] text-[#4682b4] dark:text-[#6ba3ce] rounded-xl flex items-center justify-center mx-auto border border-border">
         <ClipboardList size={26} />
       </div>
       <div className="space-y-1">
-        <h3 className="text-base font-semibold text-[#0f172a] dark:text-[#f8fafc]">Belum ada pengingat</h3>
-        <p className="text-sm text-[#64748b] dark:text-[#94a3b8] max-w-xs mx-auto leading-relaxed">
+        <h3 className="text-base font-semibold text-foreground">Belum ada pengingat</h3>
+        <p className="text-sm text-muted max-w-xs mx-auto leading-relaxed">
           Buat tugas pertama Anda agar Telegram dapat mengingatkan Anda tepat waktu.
         </p>
       </div>

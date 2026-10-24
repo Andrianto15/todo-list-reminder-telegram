@@ -126,3 +126,26 @@ Pembaruan versi minor & patch yang stabil dan backward-compatible:
 - Mechanical detector Impeccable: **0 violations (`[]`)**.
 - Next.js production build (`npm run build`): **berhasil (exit code 0)**.
 
+---
+
+## Ringkasan Perubahan: Impeccable Polish Pass (v0.4.2)
+
+### 1. Themed Browser Surfaces
+- Menambahkan styling seleksi teks bertema di `src/app/globals.css`:
+  - `::selection`: background semi-transparan Steel Blue (`rgba(70, 130, 180, 0.25)`).
+  - `caret-color: var(--primary)` pada semua text input dan textarea guna memperkuat identitas brand saat interaksi input aktif.
+
+### 2. Standardisasi Token Semantik Komponen
+- Menyelesaikan propagasi utility class semantik pada sisa komponen utilitas:
+  - `ConfirmDialog.tsx`: Dialog background menggunakan `text-foreground`, border `border-border`, dan tombol batal menggunakan `hover:bg-slate-100 dark:hover:bg-slate-800`.
+  - `EmptyState.tsx`: Penyesuaian container dan border dengan `border-border`, judul `text-foreground`, deskripsi `text-muted`.
+  - `Top3Highlight.tsx`: Card surface `bg-surface`, border `border-border`, label judul `text-foreground`, dan badge rank `text-primary`.
+  - `src/app/settings/telegram/page.tsx`: Background canvas `bg-background`, teks `text-foreground`, token card `bg-surface border-border`, dan deskripsi `text-muted`.
+
+### 3. Verifikasi & Testing
+- Menambahkan test suite baru `tests/auditPolish.test.ts` (3 tests) untuk memverifikasi rule seleksi browser, caret color, dan propagasi token semantik pada dialog dan empty state.
+- Seluruh 9 test suites lulus: **49/49 tests passed (100%)**.
+- Mechanical detector Impeccable: **0 violations (`[]`)**.
+- Pemeriksaan linter ESLint: **0 errors, 0 warnings**.
+
+

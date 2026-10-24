@@ -18,17 +18,17 @@ export default function TelegramSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090d16] transition-colors">
+    <div className="min-h-screen bg-background transition-colors">
       <Navbar />
       <div className="max-w-lg mx-auto px-4 py-8">
         <div className="flex items-center gap-2 mb-6">
-          <Send className="text-[#4682b4] dark:text-[#6ba3ce]" size={22} />
-          <h1 className="text-xl font-bold text-[#0f172a] dark:text-[#f8fafc]">Integrasi Telegram</h1>
+          <Send className="text-primary dark:text-[#6ba3ce]" size={22} />
+          <h1 className="text-xl font-bold text-foreground">Integrasi Telegram</h1>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-12 text-sm text-[#64748b] dark:text-[#94a3b8] gap-2">
-            <Loader2 size={18} className="animate-spin text-[#4682b4] dark:text-[#6ba3ce]" />
+          <div className="flex items-center justify-center py-12 text-sm text-muted gap-2">
+            <Loader2 size={18} className="animate-spin text-primary dark:text-[#6ba3ce]" />
             <span>Memuat status koneksi...</span>
           </div>
         ) : conn?.is_connected ? (
@@ -45,29 +45,29 @@ export default function TelegramSettingsPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-5 bg-white dark:bg-[#0f172a] border border-[#e2e8f0] dark:border-[#1e293b] p-6 rounded-xl shadow-xs">
+          <div className="space-y-5 bg-surface border border-border p-6 rounded-xl shadow-xs">
             <div className="flex items-start gap-3">
-              <div className="p-2.5 bg-[#eef5fa] dark:bg-[#18283d] text-[#4682b4] dark:text-[#6ba3ce] rounded-xl shrink-0">
+              <div className="p-2.5 bg-[#eef5fa] dark:bg-[#18283d] text-primary dark:text-[#6ba3ce] rounded-xl shrink-0">
                 <ShieldCheck size={22} />
               </div>
-              <p className="text-sm text-[#64748b] dark:text-[#94a3b8] leading-relaxed">
+              <p className="text-sm text-muted leading-relaxed">
                 Hubungkan akun Telegram Anda untuk menerima pesan pengingat tugas harian secara otomatis.
               </p>
             </div>
 
-            <div className="bg-[#f8fafc] dark:bg-[#18283d]/40 border border-[#e2e8f0] dark:border-[#1e293b] rounded-xl p-4 space-y-2.5">
-              <p className="text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] uppercase tracking-wider">Langkah-langkah:</p>
-              <ol className="text-sm text-[#64748b] dark:text-[#94a3b8] space-y-2 list-decimal list-inside leading-relaxed">
+            <div className="bg-slate-50 dark:bg-slate-900/40 border border-border rounded-xl p-4 space-y-2.5">
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider">Langkah-langkah:</p>
+              <ol className="text-sm text-muted space-y-2 list-decimal list-inside leading-relaxed">
                 <li>Klik tombol di bawah untuk membuat <b>Token Koneksi</b>.</li>
                 <li>Buka Telegram Bot Anda.</li>
-                <li>Kirim pesan dengan format: <code className="bg-[#e2e8f0] dark:bg-[#1e293b] px-1.5 py-0.5 rounded-md font-mono text-[#0f172a] dark:text-[#f8fafc]">/start TOKEN_ANDA</code></li>
+                <li>Kirim pesan dengan format: <code className="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded-md font-mono text-foreground">/start TOKEN_ANDA</code></li>
               </ol>
             </div>
 
             {conn?.connect_token && (
-              <div className="bg-[#eef5fa] dark:bg-[#18283d] border border-[#4682b4]/30 dark:border-[#1e293b] rounded-xl p-4 space-y-2">
-                <p className="text-xs font-semibold text-[#4682b4] dark:text-[#6ba3ce]">Token Koneksi Anda:</p>
-                <div className="flex items-center justify-between gap-2 bg-white dark:bg-[#0f172a] border border-[#e2e8f0] dark:border-[#1e293b] rounded-lg p-2 px-3 shadow-xs">
+              <div className="bg-[#eef5fa] dark:bg-[#18283d] border border-primary/30 dark:border-border rounded-xl p-4 space-y-2">
+                <p className="text-xs font-semibold text-primary dark:text-[#6ba3ce]">Token Koneksi Anda:</p>
+                <div className="flex items-center justify-between gap-2 bg-surface border border-border rounded-lg p-2 px-3 shadow-xs">
                   <code className="text-xs font-mono font-bold text-[#4682b4] dark:text-[#6ba3ce] break-all">
                     /start {conn.connect_token}
                   </code>
