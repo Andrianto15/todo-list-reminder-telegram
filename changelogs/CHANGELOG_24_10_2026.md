@@ -165,5 +165,44 @@ Pembaruan versi minor & patch yang stabil dan backward-compatible:
 - Seluruh 10 test suites lolos: **52/52 tests passed (100%)**.
 - Memperbarui `docs/PRD.md` ke versi 3.8 dengan mencantumkan requirement FR-3.5.
 
+---
+
+## Ringkasan Perubahan: Remediasi Audit Keamanan (Security Audit Remediation)
+
+### 1. HTML Entity Escaping pada Telegram Reminder
+- Menambahkan fungsi `escapeHtml` di `src/lib/telegram/reminder.ts` untuk meng-escape karakter `&`, `<`, `>`, `"`, `'`.
+- Mengamankan perakitan pesan reminder di `formatReminderMessage(task)` agar karakter khusus pada `task.title` dan `task.notes` tidak menyebabkan injeksi tag HTML atau kegagalan fatal parsing pesan pada Telegram API (`400 Bad Request: can't parse entities`).
+
+### 2. Proteksi Autentikasi Secret Token pada `/api/remind`
+- Menambahkan verifikasi `CRON_SECRET` berbasis `crypto.timingSafeEqual` pada `src/app/api/remind/route.ts` yang mendukung `Authorization: Bearer <CRON_SECRET>` maupun header `x-cron-secret`.
+- Menghentikan unauthenticated invocation publik yang berpotensi spam, eksploitasi kuota Telegram Bot, dan modifikasi tidak sah pada interval reminder database.
+
+### 3. Input Allowlisting & Mass Assignment Guard pada PATCH `/api/tasks/[id]`
+- Menambahkan fungsi sanitasi payload `sanitizeTaskUpdate` di `src/app/api/tasks/[id]/route.ts`.
+- Membatasi field yang dapat diperbarui secara ketat (`title`, `notes`, `status`, `reminder_date`) dan mengabaikan/menolak field sistem sensitif (`user_id`, `id`, `created_at`, `reminder_count`).
+- Menambahkan try/catch guard pada parsing JSON body request untuk mencegah unhandled error 500.
+
+### 4. Penguatan Validasi Secret Webhook Telegram
+- Memperbarui verifikasi secret webhook di `src/app/api/webhook/telegram/route.ts` dengan `crypto.timingSafeEqual` yang aman terhadap timing attack.
+- Menambahkan guard eksplisit jika `TELEGRAM_WEBHOOK_SECRET` di server tidak terkonfigurasi.
+- Menambahkan try/catch guard pada parsing JSON payload webhook Telegram.
+
+### 5. Standard HTTP Security Headers
+- Mengonfigurasi `async headers()` di `next.config.ts`:
+  - `X-Frame-Options: DENY` (anti-clickjacking)
+  - `X-Content-Type-Options: nosniff` (anti-MIME sniffing)
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+  - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+
+### 6. Testing & Verifikasi Komprehensif
+- Menambahkan 4 test suite baru:
+  - `tests/apiRemindAuth.test.ts` (5 tests)
+  - `tests/taskApiSecurity.test.ts` (4 tests)
+  - `tests/telegramWebhookSecurity.test.ts` (4 tests)
+  - `tests/securityHeaders.test.ts` (1 test)
+- Memperbarui `tests/reminder.test.ts` (+2 tests).
+- Total pengujian: **14 test suites, 68 tests lulus 100%**.
+
+
 
 

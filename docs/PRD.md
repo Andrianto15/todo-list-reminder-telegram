@@ -2,7 +2,7 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.8
+* **Version:** 3.9
 * **Date:** 24 Oktober 2026
 * **Author:** Project Owner
 * **Changelog:**
@@ -17,6 +17,7 @@
   * v3.6: Pembaruan Design System menyeluruh berdasarkan docs/DESIGN.md: Primary Steel Blue #4682b4 (hover: #36648b), Accent Sky Glow #0ea5e9, Canvas Background #f8fafc (dark: #090d16), Card Surface #ffffff (dark: #0f172a), Border #e2e8f0 (dark: #1e293b), Text Main #0f172a (dark: #f8fafc), Text Muted #64748b (dark: #94a3b8), tipografi Public Sans dan JetBrains Mono, type scale body 0.875rem (14px), radius tokens (sm: 0.375rem, md: 0.5rem, lg: 0.75rem, xl: 1rem, full: 9999px), elevasi shadow vocabulary (card rest, card hover, modal float), dan mobile-first min 44px tap targets
   * v3.7: Audit teknis Impeccable & Quality Polish: Aksesibilitas WCAG 2.1 AA (form control IDs & labels, modal focus trap & escape restoration, ARIA progressbar/tablist/checkbox), kontras warna status badge ≥ 4.5:1, transisi reduced-motion 80ms, migrasi next/font/google, themed selection & caret color Steel Blue, dan eliminasi residual token manual pada seluruh utility surfaces.
   * v3.8: Perbaikan layout text input "Cari Tugas" (TaskFilter): isolasi styling dasar form controls ke @layer base di globals.css dan penegasan padding eksplisit (!pl-10 !pr-10) serta pointer-events-none pada icon Search untuk mencegah tumpang tindih visual dan memastikan interaksi tap/click responsif di mobile.
+  * v3.9: Remediasi Keamanan (Security Audit): Proteksi otentikasi secret token pada /api/remind (CRON_SECRET via Bearer/x-cron-secret), HTML entity escaping pada pesan Telegram untuk mencegah HTML injection & parsing DoS, sanitasi payload & pencegahan mass assignment pada PATCH /api/tasks/[id], penguatan verifikasi timing-safe secret pada webhook Telegram, konfigurasi HTTP security headers di next.config.ts, dan klarifikasi RLS policy telegram_connections.
 
 ---
 
@@ -114,11 +115,16 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 ---
 
 ## 5. Non-Functional Requirements (NFR)
-
-* **NFR-1 Security:** Webhook Telegram diamankan dengan Secret Token Verification.
+ 
+* **NFR-1 Security:**
+  * Webhook Telegram diamankan dengan secret token verification timing-safe (`crypto.timingSafeEqual`).
+  * Endpoint `/api/remind` diamankan dengan `CRON_SECRET` (Bearer token atau header `x-cron-secret`) untuk mencegah eksekusi tanpa izin.
+  * Pesan reminder Telegram meng-escape karakter HTML khusus (`&`, `<`, `>`, `"`, `'`) guna mencegah injeksi HTML dan kegagalan parsing Telegram API.
+  * Endpoint PATCH `/api/tasks/[id]` menerapkan allowlisting field ketat untuk mencegah mass assignment / arbitrary field injection.
+  * Aplikasi menyertakan HTTP Security Headers (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`).
 * **NFR-2 Performance:** Load time dashboard < 1.5 detik (dioptimalkan via SSR + Supabase query).
 * **NFR-3 Reliability:** Cron Job berjalan tiap 1–5 menit untuk akurasi pengiriman reminder.
-* **NFR-4 Data Isolation:** Row Level Security (RLS) Supabase memastikan tiap user hanya bisa akses data miliknya.
+* **NFR-4 Data Isolation:** Row Level Security (RLS) Supabase memastikan tiap user hanya bisa akses data miliknya (tabel `telegram_connections` dibatasi hanya `SELECT` untuk client role).
 
 ---
 
@@ -128,17 +134,18 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
 | :--- | :--- | :--- | :--- |
 | `GET` | `/api/tasks` | Ambil semua task milik user | ✅ Required |
 | `POST` | `/api/tasks` | Tambah task baru | ✅ Required |
-| `PATCH` | `/api/tasks/[id]` | Edit task atau update status | ✅ Required |
+| `PATCH` | `/api/tasks/[id]` | Edit task atau update status (allowlist sanitized) | ✅ Required |
 | `POST` | `/api/telegram/connect` | Generate token koneksi Telegram | ✅ Required |
 | `POST` | `/api/account/deactivate` | Soft delete akun user | ✅ Required |
-| `POST` | `/api/remind` | Trigger cron: kirim reminder ke Telegram | 🔒 Internal (Upstash) |
-| `POST` | `/api/webhook/telegram` | Terima callback dari Telegram Bot | 🔒 Secret Token |
+| `POST` | `/api/remind` | Trigger cron: kirim reminder ke Telegram | 🔒 CRON_SECRET |
+| `POST` | `/api/webhook/telegram` | Terima callback dari Telegram Bot | 🔒 Secret Token (Timing-Safe) |
 | `GET` | `/auth/callback` | Handler redirect setelah Google OAuth | — |
 
 **Catatan:**
-- `/api/remind` dipanggil oleh Upstash QStash, bukan oleh user langsung.
-- `/api/webhook/telegram` divalidasi via header `x-telegram-bot-api-secret-token`.
-- Semua route yang butuh auth menggunakan Supabase SSR session — tidak ada JWT manual.
+- `/api/remind` dipanggil oleh Upstash QStash / Cron service dengan header `Authorization: Bearer <CRON_SECRET>` atau `x-cron-secret`.
+- `/api/webhook/telegram` divalidasi via header `x-telegram-bot-api-secret-token` menggunakan `crypto.timingSafeEqual`.
+- Endpoint `/api/tasks/[id]` membatasi field update hanya pada `title`, `notes`, `status`, dan `reminder_date`.
+- Semua route yang butuh auth user menggunakan Supabase SSR session — tidak ada JWT manual.
 
 ---
 
@@ -230,8 +237,11 @@ todo-pwa/
 
 ### Security
 - `SUPABASE_SERVICE_ROLE_KEY` **hanya** dipakai di server-side API routes (`/api/remind`, `/api/webhook`). Jangan pernah diekspos ke client.
-- Webhook Telegram divalidasi via header `x-telegram-bot-api-secret-token` — tolak request jika tidak cocok.
-- RLS aktif di semua tabel — user hanya bisa akses data dengan `user_id = auth.uid()`.
+- Webhook Telegram divalidasi via header `x-telegram-bot-api-secret-token` menggunakan perbandingan timing-safe (`crypto.timingSafeEqual`) — tolak request jika token tidak valid atau secret server belum diset.
+- Endpoint `/api/remind` diproteksi dengan `CRON_SECRET` (Bearer token atau header `x-cron-secret`) untuk mencegah eksekusi sepihak dari pihak ketiga.
+- Pesan Telegram difilter dengan HTML entity escaping (`&`, `<`, `>`, `"`, `'`) sebelum dikirimkan dengan `parse_mode: 'HTML'` guna mencegah injection & error fatal Telegram API.
+- Endpoint `/api/tasks/[id]` mengisolasi field update dengan sanitasi allowlist (`title`, `notes`, `status`, `reminder_date`) untuk mencegah mass assignment.
+- RLS aktif di semua tabel — user hanya bisa akses data dengan `user_id = auth.uid()`. Akses `telegram_connections` dari client dibatasi hanya `SELECT`.
 
 ### Persistent Reminder Logic
 - Saat task dibuat: `next_remind_at = reminder_date`, `reminder_count = 0`.
@@ -260,6 +270,7 @@ WHERE tasks.status = 'to_do'
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only | Service role key — jangan ekspos ke client |
 | `TELEGRAM_BOT_TOKEN` | Server only | Token dari BotFather |
 | `TELEGRAM_WEBHOOK_SECRET` | Server only | String random untuk validasi webhook |
+| `CRON_SECRET` | Server only | Token rahasia otentikasi cron job (/api/remind) |
 | `NEXT_PUBLIC_APP_URL` | Public | URL production app (untuk OAuth callback) |
 
 ### Dokumen Terkait
