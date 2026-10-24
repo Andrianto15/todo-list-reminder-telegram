@@ -85,9 +85,10 @@ export default function LoginPage() {
           </Link>
         </p>
 
-        <p className="text-center text-xs text-[#94a3b8] dark:text-[#64748b] pt-2 border-t border-[#e2e8f0] dark:border-[#1e293b]">
-          v{packageJson.version}
-        </p>
+        <div className="text-center text-xs text-[#94a3b8] dark:text-[#64748b] pt-2 border-t border-[#e2e8f0] dark:border-[#1e293b] space-y-0.5">
+          <p>© 2026 Andrianto Nur Iskandar. All rights reserved.</p>
+          <p>v{packageJson.version}</p>
+        </div>
       </div>
     </div>
   );

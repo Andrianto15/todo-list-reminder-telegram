@@ -2,7 +2,7 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.12
+* **Version:** 3.13
 * **Date:** 25 Oktober 2026
 * **Author:** Project Owner
 * **Changelog:**
@@ -21,6 +21,7 @@
   * v3.10: Pemutakhiran Dokumentasi Proyek (README.md) menyeluruh sesuai standar skill create-readme: penambahan visual header logo maskot resmi, penyelarasan dependency mutakhir, penambahan dokumentasi keamanan & arsitektur Upstash cron scheduler, implementasi GitHub admonitions GFM, dan pembersihan seksi lisensi redundan.
   * v3.11: Modularisasi Helper Keamanan API: Pemisahan fungsi pembantu otentikasi & sanitasi (`verifyCronSecret`, `verifyTelegramWebhookSecret`, `sanitizeTaskUpdate`) dari file route handler ke modul pustaka mandiri `src/lib/security/` guna mematuhi batasan ekspor modul Next.js App Router route handlers serta perbaikan type signature pemanggilan NextConfig pada unit test.
   * v3.12: Penambahan lisensi resmi open-source MIT License (LICENSE) pada repositori, penyelarasan metadata license di package.json, penambahan seksi lisensi di README.md, dan penambahan suite automated unit test (tests/license.test.ts).
+  * v3.13: Penambahan komponen Footer aplikasi yang mobile-first pada halaman dashboard dan settings/telegram serta penambahan informasi hak cipta (copyright © 2026 Andrianto Nur Iskandar) dan versi aplikasi pada halaman login.
 
 ---
 
@@ -74,6 +75,7 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
   * **Typography:** Font stack `Public Sans` (fallback: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif) dan `JetBrains Mono` untuk kode / monospaced. Body `0.875rem` (14px, regular 400, line-height 1.5).
   * **Shapes & Radius:** xs (`4px`), sm (`0.375rem`), md (`0.5rem`), lg (`0.75rem`), xl (`1rem`), full (`9999px`).
   * **Elevation & Motion:** Hairline borders grounded, interactive shadow vocabulary (card rest, card hover, modal float), durasi 150ms ease, mobile-first min 44px touch targets.
+* **FR-1.5 Footer & Copyright Information:** Aplikasi menyediakan komponen Footer di seluruh halaman utama (`Dashboard` dan `Integrasi Telegram`) serta penanda hak cipta pada halaman login. Komponen Footer memuat informasi hak cipta (`© 2026 Andrianto Nur Iskandar. All rights reserved.`), lisensi open-source (`MIT License`), dan penomoran versi dinamis (`v{packageJson.version}`) dengan styling token semantik yang responsif dan mobile-first.
 
 ### 4.3 Task Management (CRUD)
 * **FR-2.1 Input Task:** User dapat memasukkan judul tugas, tanggal & waktu reminder, dan catatan tambahan (opsional).

@@ -13,14 +13,14 @@ describe('HTTP Security Headers Configuration', () => {
         : (nextConfig as ConfigWithHeaders);
     expect(typeof resolvedConfig.headers).toBe('function');
 
-    const headersList = await resolvedConfig.headers();
+    const headersList = await resolvedConfig.headers!();
     expect(Array.isArray(headersList)).toBe(true);
 
     const rootHeaderConfig = headersList.find((h: { source: string }) => h.source === '/(.*)' || h.source === '/:path*');
     expect(rootHeaderConfig).toBeDefined();
 
     const headersMap = new Map(
-      rootHeaderConfig.headers.map((item: { key: string; value: string }) => [item.key.toLowerCase(), item.value])
+      rootHeaderConfig!.headers.map((item: { key: string; value: string }) => [item.key.toLowerCase(), item.value])
     );
 
     expect(headersMap.get('x-frame-options')).toBe('DENY');

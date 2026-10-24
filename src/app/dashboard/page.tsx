@@ -19,6 +19,7 @@ import TaskSkeleton from '@/components/ui/TaskSkeleton';
 import FAB from '@/components/ui/FAB';
 import EmptyState from '@/components/ui/EmptyState';
 import Navbar from '@/components/ui/Navbar';
+import Footer from '@/components/ui/Footer';
 import { ChevronDown } from 'lucide-react';
 
 const PAGE_SIZE = 5;
@@ -80,9 +81,9 @@ export default function DashboardPage() {
   }, [displayedTasks]);
 
   return (
-    <div className="min-h-screen bg-background transition-colors">
+    <div className="min-h-screen flex flex-col bg-background transition-colors">
       <Navbar />
-      <div className="max-w-lg mx-auto px-4 py-6 pb-24">
+      <div className="max-w-lg mx-auto px-4 py-6 pb-24 w-full flex-1">
         {loading ? (
           <TaskSkeleton />
         ) : tasks.length === 0 ? (
@@ -167,6 +168,7 @@ export default function DashboardPage() {
           isDestructive={true}
         />
       )}
+      <Footer />
     </div>
   );
 }
