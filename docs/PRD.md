@@ -2,8 +2,8 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.4
-* **Date:** 16 Agustus 2026
+* **Version:** 3.5
+* **Date:** 24 Oktober 2026
 * **Author:** Project Owner
 * **Changelog:**
   * v1.0 — Draft awal
@@ -13,6 +13,7 @@
   * v3.2 — Format waktu reminder Telegram UTC+7 (WIB) & penambahan inline keyboard Done, Hold, Cancel
   * v3.3 — Implementasi Design Tokens (`docs/DESIGN.md`): Primary `#0051c3`, font stack `-apple-system`, body `13px`/400, heading 300, surface/border `#ebebeb`, text `#404040`, radius `5px`, motion `150ms ease`.
   * v3.4 — Update format tanggal Top 3 Highlight menyertakan tahun (`Minggu, 16 Agt 2026 · 21:30`) dan standardisasi header Task History ke format bahasa Indonesia dengan tahun (`MINGGU, 16 AGT 2026`).
+  * v3.5 — Pembaruan minor & patch dependency packages (Next.js 16.4.3, React 19.3.1, Supabase SSR 0.12.7 & JS 2.118.0, grammY 1.46.0, TypeScript 5.9.3, Jest 30.5.2) serta penyesuaian ESLint Flat Config (`public/**` ignore & hook rules).
 
 ---
 
