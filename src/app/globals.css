@@ -85,27 +85,29 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.01em;
 }
 
-/* Form controls matching DESIGN.md */
-input,
-textarea,
-select {
-  color: var(--foreground);
-  background-color: var(--surface);
-  border-color: #cbd5e1;
-  border-width: 1px;
-  font-size: 0.875rem;
-  border-radius: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  min-height: 44px;
-  transition: all 150ms ease;
-}
+@layer base {
+  /* Form controls matching DESIGN.md */
+  input,
+  textarea,
+  select {
+    color: var(--foreground);
+    background-color: var(--surface);
+    border-color: #cbd5e1;
+    border-width: 1px;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    min-height: 44px;
+    transition: all 150ms ease;
+  }
 
-.dark input,
-.dark textarea,
-.dark select {
-  color: var(--foreground);
-  background-color: var(--surface);
-  border-color: var(--border);
+  .dark input,
+  .dark textarea,
+  .dark select {
+    color: var(--foreground);
+    background-color: var(--surface);
+    border-color: var(--border);
+  }
 }
 
 input:focus,

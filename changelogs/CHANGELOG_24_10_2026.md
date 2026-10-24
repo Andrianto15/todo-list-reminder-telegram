@@ -148,4 +148,22 @@ Pembaruan versi minor & patch yang stabil dan backward-compatible:
 - Mechanical detector Impeccable: **0 violations (`[]`)**.
 - Pemeriksaan linter ESLint: **0 errors, 0 warnings**.
 
+---
+
+## Ringkasan Perubahan: Perbaikan Layout Search Input TaskFilter (24-10-2026)
+
+### 1. Isolasi Form Controls di CSS Cascade Layers
+- Membungkus aturan elemen `input, textarea, select` di `src/app/globals.css` ke dalam `@layer base`.
+- Mengembalikan keunggulan spesifisitas utility classes Tailwind v4 (`!pl-10 !pr-10`) agar tidak tertimpa default padding `0.75rem` (12px) dari styling global form controls.
+
+### 2. Eliminasi Tumpang Tindih Visual & Interaksi Search Icon
+- Menambahkan class `pointer-events-none` pada komponen ikon `<Search />` di `src/components/tasks/TaskFilter.tsx` agar interaksi tap/click pada mobile langsung mengenai input teks di bawahnya tanpa terhalang SVG icon.
+- Menegaskan padding horizontal `!pl-10 !pr-10` pada elemen `<input>` pencarian untuk menjamin teks placeholder "Cari tugas..." dan tombol bersihkan pencarian (`X`) memiliki jarak aman dan tidak tumpang tindih dengan ikon.
+
+### 3. Testing & Dokumentasi
+- Menambahkan unit test baru `tests/taskFilterLayout.test.ts` (3 unit tests) untuk memverifikasi keberadaan `@layer base` pada form controls, `pointer-events-none` pada search icon, dan `!pl-10 !pr-10` pada search input.
+- Seluruh 10 test suites lolos: **52/52 tests passed (100%)**.
+- Memperbarui `docs/PRD.md` ke versi 3.8 dengan mencantumkan requirement FR-3.5.
+
+
 

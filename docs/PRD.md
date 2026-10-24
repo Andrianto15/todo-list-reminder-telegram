@@ -2,7 +2,7 @@
 
 ## Project: To-Do Reminder PWA with Telegram Integration
 * **Status:** Ready for Development
-* **Version:** 3.7
+* **Version:** 3.8
 * **Date:** 24 Oktober 2026
 * **Author:** Project Owner
 * **Changelog:**
@@ -16,6 +16,7 @@
   * v3.5: Pembaruan minor & patch dependency packages (Next.js 16.4.3, React 19.3.1, Supabase SSR 0.12.7 & JS 2.118.0, grammY 1.46.0, TypeScript 5.9.3, Jest 30.5.2) serta penyesuaian ESLint Flat Config (public/** ignore & hook rules)
   * v3.6: Pembaruan Design System menyeluruh berdasarkan docs/DESIGN.md: Primary Steel Blue #4682b4 (hover: #36648b), Accent Sky Glow #0ea5e9, Canvas Background #f8fafc (dark: #090d16), Card Surface #ffffff (dark: #0f172a), Border #e2e8f0 (dark: #1e293b), Text Main #0f172a (dark: #f8fafc), Text Muted #64748b (dark: #94a3b8), tipografi Public Sans dan JetBrains Mono, type scale body 0.875rem (14px), radius tokens (sm: 0.375rem, md: 0.5rem, lg: 0.75rem, xl: 1rem, full: 9999px), elevasi shadow vocabulary (card rest, card hover, modal float), dan mobile-first min 44px tap targets
   * v3.7: Audit teknis Impeccable & Quality Polish: Aksesibilitas WCAG 2.1 AA (form control IDs & labels, modal focus trap & escape restoration, ARIA progressbar/tablist/checkbox), kontras warna status badge ≥ 4.5:1, transisi reduced-motion 80ms, migrasi next/font/google, themed selection & caret color Steel Blue, dan eliminasi residual token manual pada seluruh utility surfaces.
+  * v3.8: Perbaikan layout text input "Cari Tugas" (TaskFilter): isolasi styling dasar form controls ke @layer base di globals.css dan penegasan padding eksplisit (!pl-10 !pr-10) serta pointer-events-none pada icon Search untuk mencegah tumpang tindih visual dan memastikan interaksi tap/click responsif di mobile.
 
 ---
 
@@ -93,6 +94,9 @@ Membangun aplikasi **To-Do Reminder** berbasis **Progressive Web App (PWA)** mul
   * Tampilan awal membatasi maksimal 5 data teratas.
   * Menyediakan tombol aksi mobile-first **"Load More..."** di bagian bawah daftar untuk memuat 5 data berikutnya secara bertahap hingga seluruh data ditampilkan.
   * Reset limit tampilan kembali ke 5 setiap kali filter status atau query pencarian berubah.
+* **FR-3.5 Task Search & Filter Controls:**
+  * Input pencarian tugas dilengkapi ikon kaca pembesar non-blocking (`pointer-events-none`) dan padding kiri/kanan eksplisit (`!pl-10 !pr-10`) agar teks placeholder/input serta tombol pembersih pencarian tidak tumpang tindih.
+  * Elemen dasar input/textarea/select di `globals.css` diisolasi ke dalam `@layer base` untuk mempertahankan spesifisitas utilitas Tailwind.
 
 ### 4.5 Telegram Bot Integration & Persistent Reminder
 * **FR-4.1 Koneksi Akun:** User menghubungkan akun Telegram mereka melalui halaman Settings. Flow: generate token unik di app → user kirim token ke bot → bot verifikasi & simpan `telegram_chat_id`.

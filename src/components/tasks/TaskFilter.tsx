@@ -32,7 +32,7 @@ export default function TaskFilter({
       <div className="relative">
         <Search
           size={16}
-          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748b] dark:text-[#94a3b8]"
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748b] dark:text-[#94a3b8] pointer-events-none"
         />
         <input
           type="text"
@@ -40,7 +40,7 @@ export default function TaskFilter({
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Cari tugas..."
           aria-label="Cari tugas"
-          className="w-full bg-white dark:bg-[#0f172a] border border-[#cbd5e1] dark:border-[#1e293b] rounded-lg pl-10 pr-10 py-2.5 text-sm text-[#0f172a] dark:text-[#f8fafc] placeholder:text-[#64748b] dark:placeholder:text-[#94a3b8] outline-none focus:ring-2 focus:ring-[#4682b4] focus:border-[#4682b4] transition shadow-xs min-h-[44px]"
+          className="w-full bg-white dark:bg-[#0f172a] border border-[#cbd5e1] dark:border-[#1e293b] rounded-lg !pl-10 !pr-10 py-2.5 text-sm text-[#0f172a] dark:text-[#f8fafc] placeholder:text-[#64748b] dark:placeholder:text-[#94a3b8] outline-none focus:ring-2 focus:ring-[#4682b4] focus:border-[#4682b4] transition shadow-xs min-h-[44px]"
         />
         {search && (
           <button
