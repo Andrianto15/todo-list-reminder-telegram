@@ -34,9 +34,25 @@ export async function POST(request: Request) {
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-  let body: any;
+  interface TelegramWebhookBody {
+    message?: {
+      chat: { id: number | string };
+      text?: string;
+    };
+    callback_query?: {
+      id: string;
+      data?: string;
+      message: {
+        chat: { id: number | string };
+        message_id: number;
+        text?: string;
+      };
+    };
+  }
+
+  let body: TelegramWebhookBody;
   try {
-    body = await request.json();
+    body = (await request.json()) as TelegramWebhookBody;
   } catch {
     return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
   }
