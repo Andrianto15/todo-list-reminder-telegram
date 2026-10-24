@@ -44,4 +44,12 @@ describe('verifyCronSecret', () => {
     });
     expect(verifyCronSecret(req)).toBe(true);
   });
+
+  it('returns true if upstash-forward-authorization header matches CRON_SECRET', () => {
+    process.env.CRON_SECRET = 'valid-secret-123';
+    const req = new Request('http://localhost/api/remind', {
+      headers: { 'upstash-forward-authorization': 'Bearer valid-secret-123' },
+    });
+    expect(verifyCronSecret(req)).toBe(true);
+  });
 });

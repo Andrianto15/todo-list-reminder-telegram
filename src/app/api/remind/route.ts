@@ -11,8 +11,12 @@ export function verifyCronSecret(request: Request): boolean {
   const secret = process.env.CRON_SECRET;
   if (!secret) return false;
 
-  const authHeader = request.headers.get('authorization');
-  const cronSecretHeader = request.headers.get('x-cron-secret');
+  const authHeader =
+    request.headers.get('authorization') ||
+    request.headers.get('upstash-forward-authorization');
+  const cronSecretHeader =
+    request.headers.get('x-cron-secret') ||
+    request.headers.get('upstash-forward-x-cron-secret');
 
   let token = '';
   if (authHeader?.startsWith('Bearer ')) {
